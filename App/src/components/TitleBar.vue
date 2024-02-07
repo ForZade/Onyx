@@ -20,12 +20,6 @@
     </nav>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-
-let isMaximized = ref(false);
-</script>
-
 <script lang="ts">
 import { Icon } from '@iconify/vue';
 
@@ -33,6 +27,11 @@ export default {
     name: 'TitleBar',
     components: {
         Icon
+    },
+    data() {
+        return {
+            isMaximized: false,
+        }
     }
 }
 </script>
