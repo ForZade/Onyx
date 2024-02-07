@@ -1,5 +1,6 @@
 import { app } from 'electron';
 import { createMainWindow } from './mainWindow.ts';
+import { setupIpcHandlers } from './ipcHandlers.ts';
 const path = require('path');
 
 process.env.DIST = path.join(__dirname, '../dist')
@@ -21,6 +22,8 @@ async function createWindow() {
 
   const iconPath = path.join(__dirname, '../src/assets/Logo.png');
   win.setIcon(iconPath);
+
+  setupIpcHandlers(win);
 }
 
 app.on('ready', async () => {
