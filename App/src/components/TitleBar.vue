@@ -1,6 +1,6 @@
 <!-- WINDOWS TITLEBAR -->
 <template>
-    <nav class="w-screen h-8 dark:bg-od-1 bg-ol-1 flex justify-end top-0 left-0">
+    <nav class="w-screen h-8 dark:bg-od-1 bg-ol-1 flex justify-end top-0 left-0 z-20">
         <section id="drag" class="h-full grow order-2"></section>
 
         <section class="h-full flex order-3">

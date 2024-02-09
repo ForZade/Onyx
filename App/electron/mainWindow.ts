@@ -6,7 +6,7 @@ export function createMainWindow() {
     width: 1000,
     height: 700,
     minWidth: 900,
-    minHeight: 500,
+    minHeight: 600,
     frame: false,
     webPreferences: {
       nodeIntegration: true,
