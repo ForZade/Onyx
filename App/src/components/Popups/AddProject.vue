@@ -2,8 +2,25 @@
     <main class="bg-od-darken backdrop-blur w-screen h-full absolute z-30 flex justify-center items-center overflow-hidden top-0 left-0" @click="cancelCreation">
         <section class="w-[400px] h-[500px] bg-od-4 rounded-xl flex flex-col overflow-hidden">
 
-            <section v-if="selectIcon" class="w-full grow flex justify-center items-center">
-                <h1 class="text-4xl text-od-1 uppercase font-bold">Icons coming soon</h1>
+            <section v-if="selectIconGUI" class="w-full grow flex flex-col justify-center items-center p-4 gap-3">
+                <header class="w-full h-auto flex flex-col justify-center items-center gap-1">
+                    <h1 class="text-white text-xl font-bold">Pick an icon</h1>
+                    <input v-model="selected.name" type="text" id="projectName" class="w-full border-none outline-none bg-od-1 py-2 px-3 rounded-md text-od-icon text-base font-semibold" placeholder="Search" />
+                </header>
+
+                <section class="w-full h-[324px] bg-od-2 rounded-lg p-2 overflow-y-scroll scrollbar-hide">
+                    <div class="w-full flex flex-wrap justify-start h-min gap-2">
+                        <section v-if="isIconLoaded">
+                            <div v-for="icon in icons" :key="icon" class="w-16 h-16 rounded-md dark:hover:bg-od-hover-1" @click="selectIcon(icon)">
+                                <Icon :icon="icon" class="w-10 h-10" />
+                            </div>
+                        </section>
+
+                        <section v-else class="flex justify-center items-center w-full h-full z-50">
+                            <div class="loader"></div>
+                        </section>
+                    </div>
+                </section>
             </section>
 
             <section v-else class="w-full grow flex flex-col justify-between items-center py-10">
@@ -54,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { Icon } from '@iconify/vue';
+import { Icon, listIcons } from '@iconify/vue';
 const ipcRenderer = window.require('electron').ipcRenderer;
 
 export default {
@@ -64,19 +81,24 @@ export default {
     },
     data() {
         return {
-            selectIcon: false,
+            selectIconGUI: false,
             actionButtons: [
                 { id: 0, label: 'create', icon: 'tabler:plus', class: 'bg-purple-500 text-white hover:bg-purple-400', action: this.createProject },
                 { id: 1, label: 'cancel', icon: 'tabler:x', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.cancelCreation },
             ],
             selected: {
                 name: '',
-                icon: 'tabler:folder',
-                color: 'bg-od-icon',
+                icon: '',
+                color: '',
             },
             givenColors: [
                 'bg-od-icon', 'bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-400', 'bg-cyan-400', 'bg-blue-400', 'bg-purple-400',
             ],
+
+            isIconLoaded: false,
+            icons: ['tabler:x'],
+
+            loadingMessage: 'Loading icons...',
         }
     },
     methods: {
@@ -88,28 +110,85 @@ export default {
             if (event.target === event.currentTarget) {
                 this.$emit('close-add-project');
             }
+            else if (event.key === 'Escape') {
+                this.$emit('close-add-project');
+            }
         },
         createProject() {
+            const selectedProjectColor = this.selected.color || 'bg-od-icon';
             const projectName = this.selected.name.trim();
+            const projectIcon = this.selected.icon || 'tabler:folder';
 
-            ipcRenderer.send('create-folder', projectName);
+            const projectColor = selectedProjectColor.replace("bg-", "text-");
+            
+
+            ipcRenderer.send('create-folder', projectName, projectIcon, projectColor);
             this.$emit('close-add-project');
         },
         iconMenu() {
-            this.selectIcon = !this.selectIcon;
+            this.selectIconGUI = !this.selectIconGUI;
             this.actionButtons.pop();
             this.actionButtons.push({ id: 1, label: 'back', icon: 'tabler:arrow-back', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.backAction },);
         },
         backAction() {
-            this.selectIcon = !this.selectIcon;
+            this.selectIconGUI = !this.selectIcon;
             this.actionButtons.pop();
             this.actionButtons.push({ id: 1, label: 'cancel', icon: 'tabler:x', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.cancelCreation },);
-        }
+        },
+
+        loadIcons() {
+            console.log(listIcons('', 'tabler'));
+            // import('@iconify/vue').then((iconsModule:any) => {
+            //     console.log(iconsModule.listIcons('tabler', ''));
+            //     this.icons = iconsModule.tabler.defaults.icons;
+            //     this.isIconLoaded = true;
+            // }).catch(error => {
+            //     console.error('Error loading icons:', error);
+            // });
+        },
+        selectIcon(icon:any) {
+            this.selected.icon = icon;
+            this.backAction()
+        },
+
+        handleKeyPress(event: any) {
+            if (event.key === 'Enter') {
+                this.createProject();
+            }
+
+            if (event.key === 'Escape') {
+                if (this.selectIconGUI) {
+                    this.backAction();
+                }
+                else {
+                    this.cancelCreation(event);
+                }
+            }
+        },
     },
     computed: {
         isColorSelected() {
             return (color:string) => this.selected.color === color;
         },
     },
+    mounted() {
+        this.loadIcons();
+        document.addEventListener('keyup', this.handleKeyPress);
+    }
 }
 </script>
+
+<style scoped>
+.loader {
+  width: 12px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  animation: l5 1s infinite linear alternate;
+}
+@keyframes l5 {
+    0%  {box-shadow: 20px 0 #9A85C7, -20px 0 #fff2;background: #9A85C7 }
+    33% {box-shadow: 20px 0 #9A85C7, -20px 0 #fff2;background: #fff2}
+    66% {box-shadow: 20px 0 #fff2,-20px 0 #9A85C7; background: #fff2}
+    100%{box-shadow: 20px 0 #fff2,-20px 0 #9A85C7; background: #9A85C7 }
+}
+</style>

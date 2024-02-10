@@ -41,16 +41,18 @@ export default {
     },
     mounted() {
         // Call the IPC endpoint to get the initial list of folders
-        ipcRenderer.invoke('get-folders', 'test').then((Projects) => {
-            this.Projects = Projects;
-        });
+        this.loadProjects();
     },
     methods: {
+        loadProjects() {
+            ipcRenderer.invoke('get-folders', 'test').then((Projects) => {
+                this.Projects = Projects;
+            });
+        },
         selectProject(projectId:number) {
             this.selectedProject = this.Projects[projectId].label;
         },
         addProject() {
-            console.log('clicked add project');
             this.$emit('open-add-project-window');
         },
     }
@@ -70,5 +72,33 @@ nav:before {
     color: #1E1F22;
     transform: rotate(180deg);
     z-index: 2;
+}
+
+.text-red-400 {
+    color: rgb(248 113 113);
+}
+
+.text-orange-400 {
+    color: rgb(251 146 60);
+}
+
+.text-yellow-400 {
+    color: rgb(250 204 21);
+}
+
+.text-green-400 {
+    color: rgb(74 222 128);
+}
+
+.text-cyan-400 {
+    color: rgb(34 211 238);
+}
+
+.text-blue-400 {
+    color: rgb(96 165 250);
+}
+
+.text-purple-400 {
+    color: rgb(192 132 252);
 }
 </style>

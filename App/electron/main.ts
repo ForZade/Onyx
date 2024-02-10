@@ -3,6 +3,8 @@ import { createMainWindow } from './mainWindow.ts';
 import { setupIpcHandlers } from './ipcHandlers.ts';
 const path = require('path');
 
+import { setupProjectLoader} from './projectLoader.ts';
+
 process.env.DIST = path.join(__dirname, '../dist')
 process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.env.DIST, '../public')
 
@@ -24,6 +26,7 @@ async function createWindow() {
   win.setIcon(iconPath);
 
   setupIpcHandlers(win);
+  setupProjectLoader();
 }
 
 app.on('ready', async () => {

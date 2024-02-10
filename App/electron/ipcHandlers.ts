@@ -1,4 +1,5 @@
-import { ipcMain } from 'electron';
+import { IpcMainEvent, ipcMain } from 'electron';
+import { createFolder } from "./addProject.ts";
 
 export function setupIpcHandlers(win: any) {
   ipcMain.on('get-window-state', (event) => {
@@ -32,5 +33,9 @@ export function setupIpcHandlers(win: any) {
     if (win) {
       win.close();
     }
+  });
+
+  ipcMain.on('create-folder', (_event: IpcMainEvent, projectName:string, projectIcon: string, projectColor: string) => {
+    createFolder(projectName, projectIcon, projectColor);
   });
 }

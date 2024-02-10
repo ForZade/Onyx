@@ -1,9 +1,9 @@
 <template>
-    <AddProject v-if="addProjectOpen" @close-add-project="addProjectOpen = false"/>
+    <AddProject v-if="addProjectOpen" @close-add-project="projectCreated"/>
     <TitleBar/>
 
     <main class="w-screen flex grow">
-        <Ribbon @open-add-project-window="addProjectOpen = true"/>
+        <Ribbon @open-add-project-window="addProjectOpen = true" ref="ribbonComponent"/>
     </main>
 </template>
 
@@ -19,6 +19,14 @@ export default {
     data() {
         return {
             addProjectOpen: false,
+        }
+    },
+    methods: {
+        projectCreated() {
+            this.addProjectOpen = false;
+
+            const ribbonComponent = this.$refs.ribbonComponent as typeof Ribbon;
+            ribbonComponent.loadProjects();
         }
     }
 }
