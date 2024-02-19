@@ -26,7 +26,6 @@ export function createFolder(name:string, _icon: string, _color: string) {
       fs.mkdirSync(assetsPath);
       createProjectConfig(name, _icon, _color);
   
-      console.log(`Folder "${name}" added to assets/test`);
     } catch (error:any) {
       console.error(`Error adding folder: ${error.message}`);
     }

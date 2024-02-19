@@ -6,9 +6,7 @@ export function setupProjectLoader() {
     ipcMain.handle('get-folders', (_event: any, folderPath: string) => {
         if (app.isReady()) {
           const folderFullPath = path.join(__dirname, '..', 'src', 'assets', folderPath);
-          const projectConfigPath = path.join(folderFullPath, 'projects.conf');
-      
-          console.log('Full path to projects.conf:', projectConfigPath);
+          const projectConfigPath = path.join(folderFullPath, 'projects.conf');   
       
           try {
             const folders = fs.readdirSync(folderFullPath, { withFileTypes: true })
@@ -37,7 +35,6 @@ export function setupProjectLoader() {
 
 function readProjectConfig(configPath:any, projectName:any) {
   try {
-    console.log('Reading project configuration from:', configPath);
 
     if (!fs.existsSync(configPath)) {
       console.log('Configuration file not found. Creating a default configuration.');
@@ -45,7 +42,6 @@ function readProjectConfig(configPath:any, projectName:any) {
     }
 
     const configContent = fs.readFileSync(configPath, 'utf8');
-    console.log('Config content:', configContent);
 
     const projectsConfig = JSON.parse(configContent);
 

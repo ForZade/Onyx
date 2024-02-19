@@ -5,20 +5,14 @@
             <section v-if="selectIconGUI" class="w-full grow flex flex-col justify-center items-center p-4 gap-3">
                 <header class="w-full h-auto flex flex-col justify-center items-center gap-1">
                     <h1 class="text-white text-xl font-bold">Pick an icon</h1>
-                    <input v-model="selected.name" type="text" id="projectName" class="w-full border-none outline-none bg-od-1 py-2 px-3 rounded-md text-od-icon text-base font-semibold" placeholder="Search" />
+                    <input type="text" v-model="searchText" id="projectName" class="w-full border-none outline-none bg-od-1 py-2 px-3 rounded-md text-od-icon text-base font-semibold" placeholder="Search" />
                 </header>
 
                 <section class="w-full h-[324px] bg-od-2 rounded-lg p-2 overflow-y-scroll scrollbar-hide">
                     <div class="w-full flex flex-wrap justify-start h-min gap-2">
-                        <section v-if="isIconLoaded">
-                            <div v-for="icon in icons" :key="icon" class="w-16 h-16 rounded-md dark:hover:bg-od-hover-1" @click="selectIcon(icon)">
-                                <Icon :icon="icon" class="w-10 h-10" />
-                            </div>
-                        </section>
-
-                        <section v-else class="flex justify-center items-center w-full h-full z-50">
-                            <div class="loader"></div>
-                        </section>
+                        <div v-for="icon in filteredIcons" :key="icon" class="w-16 h-16 rounded-md dark:hover:bg-od-hover-1 grid place-items-center cursor-pointer" @click="selectIcon(icon)">
+                            <Icon :icon="'tabler:' + icon" class="w-10 h-10 dark:text-od-icon text-ol-icon" />
+                        </div>
                     </div>
                 </section>
             </section>
@@ -30,7 +24,7 @@
                 </div>
 
                 <div class="w-20 h-20 rounded-full grid place-items-center border-2 border-white border-dashed cursor-pointer" @click="iconMenu">
-                    <Icon icon="tabler:folder" class="w-10 h-10 text-od-icon" />
+                    <Icon :icon="'tabler:' + selected.icon" class="w-10 h-10" :class="selected.color"/>
                 </div>
 
                 <div class="w-4/5 flex flex-col gap-1">
@@ -71,7 +65,7 @@
 </template>
 
 <script lang="ts">
-import { Icon, listIcons } from '@iconify/vue';
+import { Icon } from '@iconify/vue';
 const ipcRenderer = window.require('electron').ipcRenderer;
 
 export default {
@@ -81,29 +75,71 @@ export default {
     },
     data() {
         return {
-            selectIconGUI: false,
+            searchText: '' as string,
+            selectIconGUI: false as boolean,
             actionButtons: [
                 { id: 0, label: 'create', icon: 'tabler:plus', class: 'bg-purple-500 text-white hover:bg-purple-400', action: this.createProject },
                 { id: 1, label: 'cancel', icon: 'tabler:x', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.cancelCreation },
             ],
             selected: {
                 name: '',
-                icon: '',
-                color: '',
+                icon: 'folder',
+                color: 'text-od-icon',
             },
             givenColors: [
                 'bg-od-icon', 'bg-red-400', 'bg-orange-400', 'bg-yellow-400', 'bg-green-400', 'bg-cyan-400', 'bg-blue-400', 'bg-purple-400',
             ],
 
-            isIconLoaded: false,
-            icons: ['tabler:x'],
+            icons: [ 
+                'alert-circle', 'app-window', 'apps', 'bandage', 'basket', 'book',
+                'braces', 'brackets', 'brand-adobe', 'brand-airbnb', 'brand-amd',
+                'brand-amazon', 'brand-android', 'brand-apple', 'brand-aws', 'brand-azure',
+                'brand-bing', 'brand-blender', 'brand-bluesky', 'brand-booking', 'brand-bootstrap',
+                'brand-chrome', 'brand-cloudflare', 'brand-codepen', 'brand-css3', 'brand-debian',
+                'brand-deno', 'brand-discord', 'brand-docker', 'brand-dribbble',
+                'brand-edge', 'brand-facebook', 'brand-figma', 'brand-firefox', 'brand-flickr',
+                'brand-flutter', 'brand-foursquare', 'brand-github', 'brand-gitlab', 'brand-google',
+                'brand-google-play', 'brand-gravatar', 'brand-html5', 'brand-instagram',
+                'brand-intercom', 'brand-javascript', 'brand-kotlin', 'brand-laravel',
+                'brand-linkedin', 'brand-messenger', 'brand-netbeans', 'brand-nodejs',
+                'brand-openvpn', 'brand-opera', 'brand-paypal', 'brand-php', 'brand-pinterest',
+                'brand-polymer', 'brand-python', 'brand-react', 'brand-reddit',
+                'brand-sass', 'brand-snapchat', 'brand-soundcloud', 'brand-spotify', 'brand-stackoverflow',
+                'brand-steam', 'brand-stripe', 'brand-svelte', 'brand-tabler', 'brand-tailwind',
+                'brand-tiktok', 'brand-twitch', 'brand-twitter', 'brand-ubuntu', 'brand-vue',
+                'brand-whatsapp', 'brand-windows', 'brand-youtube', 'brand-zoom',
+                'briefcase', 'broadcast', 'browser', 'brush', 'bug', 'building', 'bulb', 'calendar',
+                'camera', 'car', 'cast', 'check', 'checklist', 'chevron-down', 'chevron-left', 'chevron-right',
+                'chevron-up', 'chevrons-down', 'chevrons-left', 'chevrons-right', 'chevrons-up', 'circle', 'clipboard',
+                'clock', 'cloud', 'cloud-upload', 'code', 'coffee', 'columns',
+                'command', 'compass', 'copy', 'copyleft', 'copyright', 'crown', 'cube', 'cut',
+                'device-desktop', 'device-laptop', 'device-mobile', 'device-tablet', 'diamond', 'direction',
+                'disc', 'discount', 'divide', 'download', 'droplet', 'edit',
+                'eye', 'eye-off', 'feather', 'file', 'file-plus',
+                'file-text', 'filter', 'flag', 'folder',
+                'gift', 'git-branch', 'git-commit', 'git-merge', 'git-pull-request',
+                'globe', 'grid', 'hash', 'headphones', 'heart', 'help-circle', 'home',
+                'inbox', 'italic', 'key', 'layout', 'link', 'list', 'loader', 'lock', 'mail',
+                'map', 'map-pin', 'menu', 'message-circle', 'minus', 'moon', 'music', 'navigation', 'octagon', 'package',
+                'paperclip', 'pause', 'phone', 'phone-call', 'play', 'printer', 'radio', 'repeat', 'rss', 'scissors',
+                'search', 'send', 'server', 'settings', 'share', 'share-2', 'shield', 'shield-off',
+                'shopping-bag', 'shopping-cart', 'skip-back', 'skip-forward','slash','square', 'star',
+                'sun', 'sunrise', 'sunset', 'tag', 'target', 'terminal',
+                'thermometer', 'toggle-left', 'toggle-right', 'tool',
+                'trash', 'trending-down', 'trending-up', 'triangle', 'truck',
+                'umbrella', 'underline', 'upload',
+                'user', 'user-check', 'user-minus', 'user-plus', 'user-x',
+                'users', 'video', 'video-off', 'volume', 'volume-2',
+                'wifi', 'wifi-off', 'wind', 'x','zoom-in', 'zoom-out',
+            ] as string[],
 
             loadingMessage: 'Loading icons...',
         }
     },
     methods: {
         selectColor(color:string) {
-            this.selected.color = color;
+            const newColor = color.replace("bg-", "text-");
+            this.selected.color = newColor;
             console.log(this.selected)
         },
         cancelCreation(event:any) {
@@ -115,13 +151,10 @@ export default {
             }
         },
         createProject() {
-            const selectedProjectColor = this.selected.color || 'bg-od-icon';
+            const projectColor = this.selected.color || 'text-od-icon';
             const projectName = this.selected.name.trim();
             const projectIcon = this.selected.icon || 'tabler:folder';
-
-            const projectColor = selectedProjectColor.replace("bg-", "text-");
             
-
             ipcRenderer.send('create-folder', projectName, projectIcon, projectColor);
             this.$emit('close-add-project');
         },
@@ -136,19 +169,10 @@ export default {
             this.actionButtons.push({ id: 1, label: 'cancel', icon: 'tabler:x', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.cancelCreation },);
         },
 
-        loadIcons() {
-            console.log(listIcons('', 'tabler'));
-            // import('@iconify/vue').then((iconsModule:any) => {
-            //     console.log(iconsModule.listIcons('tabler', ''));
-            //     this.icons = iconsModule.tabler.defaults.icons;
-            //     this.isIconLoaded = true;
-            // }).catch(error => {
-            //     console.error('Error loading icons:', error);
-            // });
-        },
         selectIcon(icon:any) {
             this.selected.icon = icon;
             this.backAction()
+            console.log(this.selected.icon);
         },
 
         handleKeyPress(event: any) {
@@ -170,9 +194,11 @@ export default {
         isColorSelected() {
             return (color:string) => this.selected.color === color;
         },
+        filteredIcons() {
+            return this.icons.filter(icon => icon.includes(this.searchText.toLowerCase()));
+        }
     },
     mounted() {
-        this.loadIcons();
         document.addEventListener('keyup', this.handleKeyPress);
     }
 }
