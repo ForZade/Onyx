@@ -26,31 +26,34 @@ export function createFolder(name:string, _icon: string, _color: string) {
       fs.mkdirSync(assetsPath);
       createProjectConfig(name, _icon, _color);
   
-      console.log(`Folder "${name}" added to assets/test`);
     } catch (error:any) {
       console.error(`Error adding folder: ${error.message}`);
     }
 }
 
 interface ProjectConfig {
-  [key: string]: {
+    label: string;
     icon: string;
     color: string;
-  };
 }
 
 function createProjectConfig(name: string, icon: string, color: string) {
-  const configPath = path.join(__dirname, '..', 'src', 'assets', 'test', 'projects.conf');
+  const configPath = path.join(__dirname, '..', 'src', 'assets', 'test', name, 'project.conf');
 
   try {
     // Read existing config file if it exists, or create a new empty one
-    let config: ProjectConfig = {};
+    let config: ProjectConfig = {
+      label: '',
+      icon: '',
+      color: '',
+    };
     if (fs.existsSync(configPath)) {
       config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
     }
 
     // Add or update the project configuration
-    config[name] = {
+    config = {
+      label: name,
       icon: icon,
       color: color,
     };

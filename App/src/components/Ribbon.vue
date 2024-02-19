@@ -2,8 +2,13 @@
     <nav class="h-screen w-12 min-w-12 dark:bg-od-1 relative -mt-8">
         <section class="h-full flex flex-col gap-2 justify-center items-center">
             <main class="w-full items-center flex flex-col gap-2 relative">
-                <div v-for="(project, index) in Projects" :key="index" class="w-9 h-9 rounded-xl grid place-items-center dark:hover:bg-od-hover-1" @click="selectProject(index)">
-                    <Icon :icon="project.icon" class="w-7 h-7" :class="project.color"/>
+                <div 
+                    v-for="(project, index) in Projects" 
+                    :key="index" 
+                    class="w-9 h-9 rounded-xl grid place-items-center dark:hover:bg-od-hover-1 relative" 
+                    @click="selectProject(index)" 
+                >
+                    <Icon :icon="'tabler:' + project.icon" class="w-7 h-7" :class="project.color"/>
                 </div>
             </main>
 
@@ -13,8 +18,6 @@
                 <Icon icon="tabler:plus" class="w-7 h-7 dark:text-od-icon dark:hover:text-white" />
             </div>
         </section>
-
-        
 
         <section class="w-full h-11 flex flex-col justify-evenly items-center absolute bottom-0 left-0">
             <div class="w-7 h-7 rounded-lg grid place-items-center dark:hover:bg-od-hover-1">
@@ -35,8 +38,13 @@ export default {
     },
     data() {
         return {
+            tooltipIndex: null,
+            tooltipTimeout: undefined,
+            x: 0,
+            y: 0,
+
             selectedProject: '',
-            Projects: [],
+            Projects: [] as any,
         }
     },
     mounted() {
@@ -55,6 +63,12 @@ export default {
         addProject() {
             this.$emit('open-add-project-window');
         },
+        doSomethingWithProjects() {
+        // This method can now safely use this.Projects
+        // Example:
+        console.log(this.Projects);
+        // Any other logic involving this.Projects
+        }
     }
 }
 </script>

@@ -6,23 +6,23 @@ export function setupProjectLoader() {
     ipcMain.handle('get-folders', (_event: any, folderPath: string) => {
         if (app.isReady()) {
           const folderFullPath = path.join(__dirname, '..', 'src', 'assets', folderPath);
-          const projectConfigPath = path.join(folderFullPath, 'projects.conf');
-      
-          console.log('Full path to projects.conf:', projectConfigPath);
-      
+          
           try {
             const folders = fs.readdirSync(folderFullPath, { withFileTypes: true })
               .filter((dirent: any) => dirent.isDirectory())
               .map((dirent: any) => {
                 const projectName = dirent.name;
-      
-                // Read the project configuration from the projects.conf file
+                const projectFolderPath = path.join(folderFullPath, projectName);
+                const projectConfigPath = path.join(projectFolderPath, 'project.conf');
+
+                // Read the project configuration from the projects.conf file inside the project folder
                 const projectConfig = readProjectConfig(projectConfigPath, projectName);
       
                 // Return the project object without the id property
-                return { label: projectName, ...projectConfig };
+                return { ...projectConfig };
               });
       
+            console.log(folders);
             return folders;
           } catch (error) {
             console.error('Error reading directory:', error);
@@ -37,25 +37,20 @@ export function setupProjectLoader() {
 
 function readProjectConfig(configPath:any, projectName:any) {
   try {
-    console.log('Reading project configuration from:', configPath);
 
     if (!fs.existsSync(configPath)) {
-      console.log('Configuration file not found. Creating a default configuration.');
-      return { icon: 'tabler:folder', color: 'text-od-icon' };
+      console.log('Configuration file not found for project:', projectName, configPath);
+      return { icon: 'folder', color: 'text-od-icon' };
     }
 
     const configContent = fs.readFileSync(configPath, 'utf8');
-    console.log('Config content:', configContent);
 
-    const projectsConfig = JSON.parse(configContent);
-
-    // Directly extract the project configuration based on the project name
-    const projectConfig = projectsConfig[projectName];
+    const projectConfig = JSON.parse(configContent);
 
     // If there's no specific configuration for the project, use default values
-    return projectConfig || { icon: 'tabler:folder', color: 'text-od-icon' };
+    return projectConfig || { icon: 'folder', color: 'text-od-icon' };
   } catch (error) {
-    console.error('Error reading project configuration:', error);
-    return { icon: 'tabler:folder', color: 'text-od-icon' };
+    console.error('Error reading project configuration for project:', projectName, error);
+    return { icon: 'folder', color: 'text-od-icon' };
   }
 }
