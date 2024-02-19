@@ -29,12 +29,14 @@
 
 <script lang="ts">
 import { Icon } from '@iconify/vue';
+import Tooltip from './extras/ribbonTooltip.vue';
 const ipcRenderer = window.require('electron').ipcRenderer;
 
 export default {
     name: "Ribbon",
     components: {
         Icon,
+        Tooltip,
     },
     data() {
         return {
