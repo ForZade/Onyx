@@ -4,6 +4,7 @@ module.exports = {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx,vue}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -32,7 +33,7 @@ module.exports = {
         'ol-hover-2': '',
         'ol-hover-2.5': '',
         'ol-icon': '#1E1F22',
-        'ol-darken': '',
+        'ol-darken': 'rgba(227, 229, 232, 0.7)',
       },
       maxWidth: {
         '240': '60rem',

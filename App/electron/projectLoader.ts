@@ -6,12 +6,7 @@ export function setupProjectLoader() {
     ipcMain.handle('get-folders', (_event: any, folderPath: string) => {
         if (app.isReady()) {
           const folderFullPath = path.join(__dirname, '..', 'src', 'assets', folderPath);
-<<<<<<< HEAD
           
-=======
-          const projectConfigPath = path.join(folderFullPath, 'projects.conf');   
-      
->>>>>>> bf351ef89d75a11b0792af2db82f7c772c971235
           try {
             const folders = fs.readdirSync(folderFullPath, { withFileTypes: true })
               .filter((dirent: any) => dirent.isDirectory())

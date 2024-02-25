@@ -1,16 +1,16 @@
 <template>
-    <main class="bg-od-darken backdrop-blur w-screen h-full absolute z-30 flex justify-center items-center overflow-hidden top-0 left-0" @click="cancelCreation">
-        <section class="w-[400px] h-[500px] bg-od-4 rounded-xl flex flex-col overflow-hidden">
+    <main class="dark:bg-od-darken bg-ol-darken backdrop-blur w-screen h-full absolute z-30 flex justify-center items-center overflow-hidden top-0 left-0" @click="cancelCreation">
+        <section class="w-[400px] h-[500px] dark:bg-od-4 bg-ol-4 rounded-xl flex flex-col overflow-hidden">
 
             <section v-if="selectIconGUI" class="w-full grow flex flex-col justify-center items-center p-4 gap-3">
                 <header class="w-full h-auto flex flex-col justify-center items-center gap-1">
-                    <h1 class="text-white text-xl font-bold">Pick an icon</h1>
-                    <input type="text" v-model="searchText" id="projectName" class="w-full border-none outline-none bg-od-1 py-2 px-3 rounded-md text-od-icon text-base font-semibold" placeholder="Search" />
+                    <h1 class="dark:text-white text-black text-xl font-bold">Pick an icon</h1>
+                    <input type="text" v-model="searchText" id="projectName" class="w-full border-none outline-none dark:bg-od-1 bg-ol-1 py-2 px-3 rounded-md dark:text-od-icon text-ol-icon text-base font-semibold" placeholder="Search" />
                 </header>
 
-                <section class="w-full h-[324px] bg-od-2 rounded-lg p-2 overflow-y-scroll scrollbar-hide">
+                <section class="w-full h-[324px] dark:bg-od-2 bg-ol-2 rounded-lg p-2 overflow-y-scroll scrollbar-hide">
                     <div class="w-full flex flex-wrap justify-start h-min gap-2">
-                        <div v-for="icon in filteredIcons" :key="icon" class="w-16 h-16 rounded-md dark:hover:bg-od-hover-1 grid place-items-center cursor-pointer" @click="selectIcon(icon)">
+                        <div v-for="icon in filteredIcons" :key="icon" class="w-16 h-16 rounded-md dark:hover:bg-od-hover-1 hover:bg-ol-hover-1 grid place-items-center cursor-pointer" @click="selectIcon(icon)">
                             <Icon :icon="'tabler:' + icon" class="w-10 h-10 dark:text-od-icon text-ol-icon" />
                         </div>
                     </div>
@@ -23,32 +23,32 @@
                     <p class="text-base text-od-icon text-center px-6">Give your project a personality! Give it a name, a color and an icon!</p>
                 </div>
 
-                <div class="w-20 h-20 rounded-full grid place-items-center border-2 border-white border-dashed cursor-pointer" @click="iconMenu">
+                <div class="w-20 h-20 rounded-full grid place-items-center border-2 dark:border-white border-black border-dashed cursor-pointer" @click="iconMenu">
                     <Icon :icon="'tabler:' + selected.icon" class="w-10 h-10" :class="selected.color"/>
                 </div>
 
                 <div class="w-4/5 flex flex-col gap-1">
-                    <label for="projectName" class="flex flex-col text-sm text-white font-bold ml-1">Project Name</label>
-                    <input v-model="selected.name" type="text" id="projectName" class="w-full border-none outline-none bg-od-1 py-2 px-3 rounded-md text-od-icon text-base" placeholder="New Project" />
+                    <label for="projectName" class="flex flex-col text-sm dark:text-white text-black font-bold ml-1">Project Name</label>
+                    <input v-model="selected.name" type="text" id="projectName" class="w-full border-none outline-none dark:bg-od-1 bg-ol-1 py-2 px-3 rounded-md dark:text-od-icon text-ol-icon text-base" placeholder="New Project" />
                 </div>
 
                 <div class="w-4/5 flex flex-col gap-1">
-                    <label for="projectColor" class="flex flex-col text-sm text-white font-bold ml-1">Project Color</label>
-                    <div class="w-full h-14 flex text-white items-center justify-center select-none">
+                    <label for="projectColor" class="flex flex-col text-sm dark:text-white text-black font-bold ml-1">Project Color</label>
+                    <div class="w-full h-14 flex dark:text-white text-black items-center justify-center select-none">
                         <!-- <div class="bg-od-2 h-full p-1.5 flex items-center gap-3 rounded-lg">
                             <div class="w-10 h-10 flex justify-center items-center">
                                 <div class="color-picker outline-none w-6 h-6"></div>
                             </div>
                         </div> -->
 
-                        <div class="bg-od-2 h-full py-2 px-3 flex items-center justify-evenly rounded-lg w-full">
+                        <div class="dark:bg-od-2 bg-ol-2 h-full py-2 px-3 flex items-center justify-evenly rounded-lg w-full">
                             <div v-for="color in givenColors" :key="color" class="w-6 h-6 rounded-full cursor-pointer" :class="[color, { 'selected-color': isColorSelected(color) }, { 'border-2 border-white': isColorSelected(color) }]" @click="selectColor(color)"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <nav class="h-16 w-full bg-od-3 flex flex-row-reverse justify-between items-center px-4">
+            <nav class="h-16 w-full dark:bg-od-3 bg-ol-3 flex flex-row-reverse justify-between items-center px-4">
                 <div 
                     v-for="button in actionButtons" 
                     :key="button.id" 
