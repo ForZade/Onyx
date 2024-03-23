@@ -1,6 +1,8 @@
 import { app } from 'electron';
 import { createMainWindow } from './mainWindow.ts';
 import { setupIpcHandlers } from './ipcHandlers.ts';
+import { findConfig } from './manageConfig.ts';
+import { languageTexts } from './handleLanguages.ts';
 const path = require('path');
 
 import { setupProjectLoader} from './projectLoader.ts';
@@ -11,6 +13,8 @@ process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.
 let win:any;
 
 async function createWindow() {
+  findConfig();
+  languageTexts();
   win = createMainWindow();
 
   const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL']

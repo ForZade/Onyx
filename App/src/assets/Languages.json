@@ -1,0 +1,107 @@
+{
+    "en": {
+        "Modules": {
+            "General": "General",
+            "Appearance": "Appearance",
+            "Projects": "Projects"
+        },
+        "AddProject": {
+            "Header": "Customize your project",
+            "Description": "Give your project a personality! Give it a name, a color and an icon!",
+            "Search": "Search..",
+            "Name": "Project name",
+            "Color": "Project color",
+            "Icon": "Pick an icon",
+            "Buttons": {
+                "Back": "Back",
+                "Cancel": "Cancel",
+                "Create": "Create"
+            }
+        },
+        "Settings": {
+            "Options": "Options",
+            "General": {
+                "ModuleName": "General"
+            },
+            "Appearance": {
+                "ModuleName": "Appearance",
+                "Theme": "Theme"
+            },
+            "Projects": {
+                "ModuleName": "Projects",
+                "Header": "Projects",
+                "Description": "Select a project to edit"
+            },
+            "Project": {
+                "Search": "Search..",
+                "Buttons": {
+                    "Save": "Save",
+                    "Cancel": "Cancel"
+                },
+                "Headers": {
+                    "Icon": "Icon",
+                    "ProjectName": "Project name",
+                    "Color": "Color"
+                },
+                "Descriptions": {
+                    "Icon": "Select an icon",
+                        "ProjectName": "Change project name",
+                        "Color": "Change the color of your project"
+                    }
+        
+            }
+        }
+    },
+    "lt": {
+        "Modules": {
+            "General": "Bendras",
+            "Appearance": "Išvaizda",
+            "Projects": "Projektai"
+        },
+        "AddProject": {
+            "Header": "Pridėk savo projektą",
+            "Description": "Suteikite savo projektui asmenybę - pavadinimą, spalvą ir piktogramą!",
+            "Search": "Paieška..",
+            "Name": "Projekto pavadinimas",
+            "Color": "Projekto spalva",
+            "Icon": "Pasirinkti piktogramą",
+            "Buttons": {
+                "Back": "Atgal",
+                "Cancel": "Atšaukti",
+                "Create": "Sukurti"
+            }
+        },
+        "Settings": {
+            "Options": "Nustatymai",
+            "General": {
+                "ModuleName": "Bendras"
+            },
+            "Appearance": {
+                "ModuleName": "Išvaizda",
+                "Theme": "Tema"
+            },
+            "Projects": {
+                "ModuleName": "Projektai",
+                "Header": "Projektai",
+                "Description": "Pasirinkite projektą kuri norite redaguoti"
+            },
+            "Project": {
+                "Search": "Paieška..",
+                "Buttons": {
+                    "Save": "Išsaugoti",
+                    "Cancel": "Atšaukti"
+                },
+                "Headers": {
+                    "Icon": "Piktograma",
+                    "Name": "Projekto pavadinimas",
+                    "Color": "Spalva"
+                },
+                "Descriptions": {
+                    "Icon": "Pasirinkite piktogramą",
+                    "Name": "Pakeiskite projekto pavadinimą",
+                    "Color": "Pakeiskite projekto spalvą"
+                }
+            }
+        }
+    }
+}

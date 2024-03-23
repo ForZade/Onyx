@@ -6,7 +6,7 @@
                     v-for="(project, index) in Projects" 
                     :key="index" 
                     class="w-9 h-9 cursor-pointer rounded-xl grid place-items-center dark:hover:bg-od-hover-1 relative" 
-                    @click="selectProject(index)" 
+                    @click="selectProject(project.label)" 
                 >
                     <Icon :icon="'tabler:' + project.icon" class="w-7 h-7" :class="project.color"/>
                 </div>
@@ -59,8 +59,9 @@ export default {
                 this.Projects = Projects;
             });
         },
-        selectProject(projectId:number) {
-            this.selectedProject = this.Projects[projectId].label;
+        selectProject(project: string) {
+            this.selectedProject = project;
+            ipcRenderer.send('select-project', this.selectedProject);
         },
         addProject() {
             this.$emit('open-add-project-window');
@@ -69,7 +70,7 @@ export default {
         openSettings() {
             this.$emit('open-settings-window');
         }
-    }
+    },
 }
 </script>
 

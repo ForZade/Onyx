@@ -102,6 +102,7 @@ export default {
             ipcRenderer.send('change-window-size');
         },
         close() {
+            console.log('close');
             ipcRenderer.send('close-window');
         },
 

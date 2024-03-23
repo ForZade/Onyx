@@ -4,8 +4,8 @@
 
             <section v-if="selectIconGUI" class="w-full grow flex flex-col justify-center items-center p-4 gap-3">
                 <header class="w-full h-auto flex flex-col justify-center items-center gap-1">
-                    <h1 class="dark:text-white text-black text-xl font-bold">Pick an icon</h1>
-                    <input type="text" v-model="searchText" id="projectName" class="w-full border-none outline-none dark:bg-od-1 bg-ol-1 py-2 px-3 rounded-md dark:text-od-icon text-ol-icon text-base font-semibold" placeholder="Search" />
+                    <h1 class="dark:text-white text-black text-xl font-bold">{{ Text.Icon }}</h1>
+                    <input type="text" v-model="searchText" id="projectName" class="w-full border-none outline-none dark:bg-od-1 bg-ol-1 py-2 px-3 rounded-md dark:text-od-icon text-ol-icon text-base font-semibold" :placeholder="Text.Search" />
                 </header>
 
                 <section class="w-full h-[324px] dark:bg-od-2 bg-ol-2 rounded-lg p-2 overflow-y-scroll scrollbar-hide">
@@ -19,8 +19,8 @@
 
             <section v-else class="w-full grow flex flex-col justify-between items-center py-10">
                 <div class="px-4">
-                    <h1 class="text-2xl text-white font-bold text-center">Customize your project</h1>
-                    <p class="text-base text-od-icon text-center px-6">Give your project a personality! Give it a name, a color and an icon!</p>
+                    <h1 class="text-2xl text-white font-bold text-center">{{ Text.Header }}</h1>
+                    <p class="text-base text-od-icon text-center px-6">{{ Text.Description }}</p>
                 </div>
 
                 <div class="w-20 h-20 rounded-full grid place-items-center border-2 dark:border-white border-black border-dashed cursor-pointer" @click="iconMenu">
@@ -28,12 +28,12 @@
                 </div>
 
                 <div class="w-4/5 flex flex-col gap-1">
-                    <label for="projectName" class="flex flex-col text-sm dark:text-white text-black font-bold ml-1">Project Name</label>
+                    <label for="projectName" class="flex flex-col text-sm dark:text-white text-black font-bold ml-1">{{ Text.Name }}</label>
                     <input v-model="selected.name" type="text" id="projectName" class="w-full border-none outline-none dark:bg-od-1 bg-ol-1 py-2 px-3 rounded-md dark:text-od-icon text-ol-icon text-base" placeholder="New Project" />
                 </div>
 
                 <div class="w-4/5 flex flex-col gap-1">
-                    <label for="projectColor" class="flex flex-col text-sm dark:text-white text-black font-bold ml-1">Project Color</label>
+                    <label for="projectColor" class="flex flex-col text-sm dark:text-white text-black font-bold ml-1">{{ Text.Color }}</label>
                     <div class="w-full h-14 flex dark:text-white text-black items-center justify-center select-none">
                         <!-- <div class="bg-od-2 h-full p-1.5 flex items-center gap-3 rounded-lg">
                             <div class="w-10 h-10 flex justify-center items-center">
@@ -57,7 +57,7 @@
                     @click="button.action"
                     >
                     <Icon :icon="button.icon" class="w-5 h-5"/>
-                    {{ button.label }}
+                    {{ Text.Buttons[button.name] }}
                 </div>
             </nav>
         </section>
@@ -73,13 +73,19 @@ export default {
     components: {
         Icon
     },
+    props: {
+        Text: {
+            type: Object,
+            default: () => ({}),
+        }
+    },
     data() {
         return {
             searchText: '' as string,
             selectIconGUI: false as boolean,
             actionButtons: [
-                { id: 0, label: 'create', icon: 'tabler:plus', class: 'bg-purple-500 text-white hover:bg-purple-400', action: this.createProject },
-                { id: 1, label: 'cancel', icon: 'tabler:x', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.cancelCreation },
+                { id: 0, name: "Create", icon: 'tabler:plus', class: 'bg-purple-500 text-white hover:bg-purple-400', action: this.createProject },
+                { id: 1, name: "Cancel", icon: 'tabler:x', class: 'bg-transparent dark:text-white text-black hover:bg-od-hover-2', action: this.cancelCreation },
             ],
             selected: {
                 name: '',
@@ -132,15 +138,18 @@ export default {
                 'users', 'video', 'video-off', 'volume', 'volume-2',
                 'wifi', 'wifi-off', 'wind', 'x','zoom-in', 'zoom-out',
             ] as string[],
-
-            loadingMessage: 'Loading icons...',
+            language: 'en' as string,
         }
     },
     methods: {
+        getConfig() {
+            ipcRenderer.invoke('get-config').then((config: any) => {
+                this.language = config.language;
+            });
+        },
         selectColor(color:string) {
             const newColor = color.replace("bg-", "text-");
             this.selected.color = newColor;
-            console.log(this.selected)
         },
         cancelCreation(event:any) {
             if (event.target === event.currentTarget) {
@@ -161,12 +170,12 @@ export default {
         iconMenu() {
             this.selectIconGUI = !this.selectIconGUI;
             this.actionButtons.pop();
-            this.actionButtons.push({ id: 1, label: 'back', icon: 'tabler:arrow-back', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.backAction },);
+            this.actionButtons.push({ id: 1, name: 'Back', icon: 'tabler:arrow-back', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.backAction },);
         },
         backAction() {
             this.selectIconGUI = !this.selectIcon;
             this.actionButtons.pop();
-            this.actionButtons.push({ id: 1, label: 'cancel', icon: 'tabler:x', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.cancelCreation },);
+            this.actionButtons.push({ id: 1, name: 'Cancel', icon: 'tabler:x', class: 'bg-transparent text-white hover:bg-od-hover-2', action: this.cancelCreation },);
         },
 
         selectIcon(icon:any) {
@@ -199,7 +208,10 @@ export default {
         }
     },
     mounted() {
+        this.getConfig();
         document.addEventListener('keyup', this.handleKeyPress);
+
+        console.log(this.Text);
     }
 }
 </script>
