@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import { createMainWindow } from './mainWindow.ts';
 import { setupIpcHandlers } from './ipcHandlers.ts';
-import { findConfig } from './manageConfig.ts';
+import { setTheme } from './functions/setTheme.ts';
 import { languageTexts } from './handleLanguages.ts';
 const path = require('path');
 
@@ -13,7 +13,6 @@ process.env.VITE_PUBLIC = app.isPackaged ? process.env.DIST : path.join(process.
 let win:any;
 
 async function createWindow() {
-  findConfig();
   languageTexts();
   win = createMainWindow();
 
@@ -35,4 +34,5 @@ async function createWindow() {
 
 app.on('ready', async () => {
   await createWindow();
+  setTheme();
 });

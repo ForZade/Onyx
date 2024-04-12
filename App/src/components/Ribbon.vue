@@ -62,6 +62,7 @@ export default {
         selectProject(project: string) {
             this.selectedProject = project;
             ipcRenderer.send('select-project', this.selectedProject);
+            ipcRenderer.send('load-file-tree');
         },
         addProject() {
             this.$emit('open-add-project-window');

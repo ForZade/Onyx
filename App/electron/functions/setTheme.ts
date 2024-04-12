@@ -1,20 +1,16 @@
-import { app } from 'electron';
-import { getMainConfig } from '../handleConfig/getConfigPath';
-const fs = require('fs');
-const path = require('path');
+import { ConfigProp, getMainConfig } from '../handleConfig/getConfig';
 
 export function setTheme() {
-    app.on('ready', () => {
-        const appElement = document.getElementById('app');
-        const config = getMainConfig();
-        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const config: ConfigProp | undefined = getMainConfig();
 
-        const theme = config.theme === 'system' ? (prefersDarkMode ? 'dark' : 'light') : config.theme;
+    switch (config?.theme) {
+        case 'dark':
+            return 'dark';
 
-        appElement?.classList.toggle('dark', theme === 'dark');
-        
-        if (theme === 'light') {
-            appElement?.classList.remove('dark');
-        }
-    });
+        case 'light':
+            return 'light';
+
+        case 'system':
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
 }

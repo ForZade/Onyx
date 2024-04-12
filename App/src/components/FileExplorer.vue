@@ -28,6 +28,7 @@ aside:before {
 </style>
 
 <script lang="ts">
+import { ipcRenderer } from 'electron';
 import TreeGrid from './FileExplorer/TreeGrid.vue';
 
 export default {
@@ -46,96 +47,7 @@ export default {
   
         isNavHidden: false,
 
-        treeData: [
-          {
-            id: 1,
-            name: 'Facebook',
-            type: 'dir',
-            children: [
-                {
-                    id: 5,
-                    name: 'Profiles',
-                    type: 'dir',
-                    children: [
-                        {
-                            id: 9,
-                            name: 'Profile 1',
-                            type: 'md'
-                        },
-                        {
-                            id: 10,
-                            name: 'Profile 2',
-                            type: 'md'
-                        }
-                    ]
-                },
-                {
-                    id: 6,
-                    name: 'Groups',
-                    type: 'dir',
-                    children: [
-                        {
-                            id: 11,
-                            name: 'Group 1',
-                            type: 'md'
-                        }
-                    ]
-                }
-            ]
-          },
-          {
-            id: 2,
-            name: 'Twitter',
-            type: 'dir',
-            children: [
-                {
-                    id: 7,
-                    name: 'Profiles',
-                    type: 'dir',
-                    children: [
-                        {
-                            id: 12,
-                            name: 'Profile 1',
-                            type: 'md'
-                        }
-                    ]
-                },
-            ]
-          },
-          {
-            id: 3,
-            name: 'Instagram',
-            type: 'dir',
-            children: [
-                {
-                    id: 8,
-                    name: 'Images',
-                    type: 'dir',
-                    children: [
-                        {
-                            id: 13,
-                            name: 'Image 1',
-                            type: 'png'
-                        },
-                        {
-                            id: 14,
-                            name: 'Image 2',
-                            type: 'jpg'
-                        }
-                    ]
-                }
-            ]
-          },
-          {
-            id: 4,
-            name: 'Threads',
-            type: 'dir',
-            children: [
-            
-            ]
-          },
-
-        ]
+        treeData: []
       };
     },
     computed: {
@@ -178,15 +90,21 @@ export default {
         window.removeEventListener("mousemove", this.resize);
         window.removeEventListener("mouseup", this.stopResize);
       },
-    //   checkHideNav(event) {
-    //     if (this.isResizing && event.clientX < this.hideWidth) {
-    //       this.$refs.nav.style.display = "none";
-    //       this.isNavHidden = true;
-    //     } else {
-    //       this.$refs.nav.style.display = "block";
-    //       this.isNavHidden = false;
-    //     }
-    //   },
+
+
+
+      loadFileTree() {
+        ipcRenderer.send('load-file-tree');
+        
+        ipcRenderer.on('load-file-tree', (_, treeData) => {
+          console.log(treeData);
+          this.treeData = treeData;
+          console.log(this.treeData);
+        })
+      }
     },
+    mounted() {
+      this.loadFileTree();
+    }
   };
 </script>

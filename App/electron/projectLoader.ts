@@ -22,7 +22,6 @@ export function setupProjectLoader() {
                 return { ...projectConfig };
               });
       
-            console.log(folders);
             return folders;
           } catch (error) {
             console.error('Error reading directory:', error);

@@ -1,20 +1,19 @@
-import { getProjectConfigPath, getProjectPath } from "./getConfigPath";
+import { app } from 'electron';
+import { getProjectConfigPath, getProjectPath, getMainConfigPath, ConfigProp } from "./getConfig";
 const fs = require('fs');
 
-interface ProjectConfig {
+interface ProjectConfigProp {
     label: string;
     icon: string;
     color: string;
 }
 
 export function manageProjectConfig(label: string, color: string, icon:string, oldProjectName: string) {
-    
-    console.log('clicked')
     const configPath = getProjectConfigPath(oldProjectName);
 
     try {
         // Read existing config file if it exists, or create a new empty one
-        let config: ProjectConfig = {
+        let config: ProjectConfigProp = {
             label: '',
             icon: '',
             color: '',
@@ -44,5 +43,24 @@ export function manageProjectConfig(label: string, color: string, icon:string, o
     }
     catch (error: any) {
         console.log('failed')
+    }
+}
+
+export function selectProject(project: string) {
+    if (app.isReady()) {
+        const configPath = getMainConfigPath()
+        let config: ConfigProp = {
+            theme: 'system',
+            language: 'en',
+            lastLoaded: ''
+        };
+
+        config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+        config.lastLoaded = project;
+
+        fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
+
+        console.log('Config has been changed:' + config);
+        return config;
     }
 }

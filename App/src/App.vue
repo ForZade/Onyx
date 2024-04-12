@@ -7,6 +7,10 @@
         <main class="w-screen flex grow">
             <Ribbon @open-add-project-window="addProjectOpen = true" @open-settings-window="settingsOpen = true" ref="ribbonComponent"/>
             <FileExplorer/>
+            <section class="w-full flex flex-col overflow-hidden" style="height: calc(100vh - 2.5rem);">
+                <ToolBar/>
+                <ContentEditor />
+            </section>
         </main>
     </main>
 </template>
@@ -18,6 +22,8 @@ import SettingsWindow from './components/Popups/SettingsWindow.vue';
 import TitleBar from './components/TitleBar.vue';
 import Ribbon from './components/Ribbon.vue';
 import FileExplorer from './components/FileExplorer.vue';
+import ToolBar from './components/ToolBar.vue';
+import ContentEditor from './components/ContentEditor.vue';
 
 const ipcRenderer = window.require('electron').ipcRenderer;
 
@@ -27,7 +33,9 @@ export default {
         SettingsWindow,
         TitleBar,
         Ribbon,
-        FileExplorer
+        FileExplorer,
+        ToolBar,
+        ContentEditor,
     },
     data() {
         return {
@@ -41,9 +49,22 @@ export default {
         }
     },
     methods: {
-        getLanguageText() {
-            ipcRenderer.invoke('get-language').then((item: any) => {
-                this.Text = item;
+        setupApp() {
+            const app = document.getElementById('app');
+
+            ipcRenderer.send('setup-app');
+
+            ipcRenderer.on('setup-app', (_, content: any) => {
+                if (content.theme === 'dark') {
+                    console.log('Theme is dark')
+                    app?.classList.add('dark');
+                }
+                else {
+                    console.log('Theme is light');
+                    app?.classList.remove('dark');
+                }
+
+                this.Text = content.language;
             });
         },
         projectCreated() {
@@ -52,33 +73,14 @@ export default {
             const ribbonComponent = this.$refs.ribbonComponent as typeof Ribbon;
             ribbonComponent.loadProjects();
         },
-        getMainConfig() {
-            ipcRenderer.invoke('get-config').then((config: any) => {
-                this.setTheme(config.theme);
-            });
-        },
-        setTheme(theme: string) {
-            const app = document.getElementById('app');
-
-            if(theme === 'system') {
-                if(window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    app.classList.add('dark')
-                }
-                else {
-                    app.classList.remove('dark')
-                }
-            }
-            else if(theme === 'light') {
-                app.classList.remove('dark')
-            }
-            else if(theme === 'dark') {
-                app.classList.add('dark')
-            }
-        }
     },
     mounted() {
-        this.getLanguageText();
-        this.getMainConfig();
+        this.setupApp();
+    },
+    computed: {
+        appHeight() {
+            return window.innerHeight - 32 - 40;
+        }
     }
 }
 </script>

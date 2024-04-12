@@ -1,7 +1,7 @@
 <template>
     <div>
-        <span @click="toggle" class="py-0.5 px-2 dark:text-od-icon text-ol-icon flex items-center select-none cursor-pointer dark:hover:bg-od-hover-1">
-            <Icon v-if="node.type === 'dir'" :icon="iconByType" class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-90' : 'rotate-0'"/>
+        <span @click="handleNodeClick(node)" class="py-0.5 px-2 dark:text-od-icon text-ol-icon flex items-center select-none cursor-pointer dark:hover:bg-od-hover-1">
+            <Icon v-if="node.type === 'dir'" icon="tabler:chevron-right" class="w-4 h-4 transition-transform duration-200" :class="expanded ? 'rotate-90' : 'rotate-0'"/>
             {{ node.name }}
         </span>
         <ul v-show="expanded">
@@ -28,26 +28,17 @@
         expanded: false,
       }
     },
-    computed: {
-        iconByType() {
-            switch (this.node.type) {
-                case 'dir':
-                    return 'tabler:chevron-right';
-
-                case 'jpg':
-                    return 'tabler:file-type-jpg';
-
-                case 'png':
-                    return 'tabler:file-type-png';
-
-                default: 
-                    return 'tabler:file';
-            }
-        }
-    },
     methods: {
-      toggle() {
-        this.expanded = !this.expanded;
+      // toggle() {
+      //   this.expanded = !this.expanded;
+      // },
+      handleNodeClick(node: any) {
+        if (node.type === 'dir') {
+          this.expanded = !this.expanded;
+        }
+        
+        console.log(node.name);
+        console.log(node.path);
       }
     }
   }
