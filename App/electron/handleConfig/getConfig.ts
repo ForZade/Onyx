@@ -10,6 +10,7 @@ export interface ConfigProp {
     theme: string;
     language: string;
     lastLoaded: string;
+    loadedFilePath: string;
 }
 
 export interface ProjectConfigProp {
@@ -25,7 +26,8 @@ export function getMainConfig() { //Previous findConfig function
             let config: ConfigProp = {
                 theme: 'system',
                 language: 'en',
-                lastLoaded: ''
+                lastLoaded: '',
+                loadedFilePath: '',
             };
 
             if (fs.existsSync(configPath)) {

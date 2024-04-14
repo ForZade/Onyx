@@ -8,7 +8,6 @@
             <Ribbon @open-add-project-window="addProjectOpen = true" @open-settings-window="settingsOpen = true" ref="ribbonComponent"/>
             <FileExplorer/>
             <section class="w-full flex flex-col overflow-hidden" style="height: calc(100vh - 2.5rem);">
-                <ToolBar/>
                 <ContentEditor />
             </section>
         </main>
@@ -22,7 +21,6 @@ import SettingsWindow from './components/Popups/SettingsWindow.vue';
 import TitleBar from './components/TitleBar.vue';
 import Ribbon from './components/Ribbon.vue';
 import FileExplorer from './components/FileExplorer.vue';
-import ToolBar from './components/ToolBar.vue';
 import ContentEditor from './components/ContentEditor.vue';
 
 const ipcRenderer = window.require('electron').ipcRenderer;
@@ -34,7 +32,6 @@ export default {
         TitleBar,
         Ribbon,
         FileExplorer,
-        ToolBar,
         ContentEditor,
     },
     data() {

@@ -12,6 +12,7 @@
   
   <script lang="ts">
     import { Icon } from '@iconify/vue';
+import { ipcRenderer } from 'electron';
 
   export default {
     components: {
@@ -36,9 +37,9 @@
         if (node.type === 'dir') {
           this.expanded = !this.expanded;
         }
-        
-        console.log(node.name);
-        console.log(node.path);
+        if (node.type === '.json') {
+          ipcRenderer.send('open-file', (node.path));
+        }
       }
     }
   }

@@ -11,7 +11,7 @@ interface FileNode {
 }
 
 let idCounter = 0;
-const allowedExtensions = ['.md', '.jpg', '.png', '.jpeg', '.gif', '.avif', '.webm'];
+const allowedExtensions = ['.json'];
 
 export function loadFileTree() {
     const mainConfig = getMainConfig();

@@ -7,6 +7,19 @@ module.exports = {
   darkMode: 'class',
   theme: {
     extend: {
+      typography: (theme) => ({
+        dark: {
+          css: {
+            color: theme('colors.slate.100'),
+            pre: {
+              backgroundColor: '#1E1F22',
+            },
+            blockquote: {
+              borderLeft: '2px solid white',
+            },
+          }
+        },
+      }),
       colors: {
         'od-context': '#111214',
         'od-1': '#1E1F22',
@@ -54,6 +67,9 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/forms'),
+  ],
 }
 

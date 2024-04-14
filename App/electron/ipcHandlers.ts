@@ -1,11 +1,14 @@
 import { IpcMainEvent, ipcMain } from 'electron';
 import { createFolder } from "./addProject.ts";
-import { manageProjectConfig, selectProject } from './manageConfig.ts';
+import { manageProjectConfig } from './manageConfig.ts';
+import { selectProject } from './updaters/updateMainConfig.ts';
 import { minimizeWindow, closeWindow, changeWindowSize, getWindowState } from './functions/TitleBar.ts';
 import { getMainConfig } from './handleConfig/getConfig.ts';
 import { setTheme } from './functions/setTheme.ts';
 import { setLanguage } from './functions/setLanguage.ts';
 import { loadFileTree } from './loaders/FileTree.ts';
+import { SaveFile } from './functions/saveFile.ts';
+import { OpenFile } from './functions/openFile.ts';
 
 const titleBarActions = [
   { action: 'get-window-state', function: getWindowState, },
@@ -50,5 +53,13 @@ export function setupIpcHandlers(win: any) {
     }
 
     event.sender.send('setup-app', content);
+  });
+
+  ipcMain.on('open-file', (_event: any, path: string) => {
+    OpenFile(path);
+  })
+
+  ipcMain.on('save-file', (_event: any, _content: any) => {
+    SaveFile();
   });
 }
