@@ -54,7 +54,7 @@ export default {
             ipcRenderer.on('setup-app', (_, content: any) => {
                 if (content.theme === 'dark') {
                     console.log('Theme is dark')
-                    app?.classList.add('dark');
+                    app?.classList.remove('dark'); //! CHANGE TO ADD
                 }
                 else {
                     console.log('Theme is light');

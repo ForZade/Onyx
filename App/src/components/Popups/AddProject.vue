@@ -19,7 +19,7 @@
 
             <section v-else class="w-full grow flex flex-col justify-between items-center py-10">
                 <div class="px-4">
-                    <h1 class="text-2xl text-white font-bold text-center">{{ Text.Header }}</h1>
+                    <h1 class="text-2xl dark:text-white text-black font-bold text-center">{{ Text.Header }}</h1>
                     <p class="text-base text-od-icon text-center px-6">{{ Text.Description }}</p>
                 </div>
 

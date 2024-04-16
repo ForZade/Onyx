@@ -1,5 +1,6 @@
 <template>
-    <aside ref="nav" class="relative dark:bg-od-2" :style="resizableDivStyle" @mousemove="checkHideNav">
+    <aside ref="nav" class="relative dark:bg-od-2 bg-ol-2" :style="resizableDivStyle" @mousemove="checkHideNav">
+        <div class="w-4 h-4 absolute top-0 -right-4 rounded-br-[50%] shadow-[10px_0_0_0] dark:text-od-2 text-ol-2 rotate-180 z-0"></div>
         
         <TreeGrid :treeData="treeData" class="mt-4"/>
 
@@ -10,22 +11,6 @@
 
     
 </template>
-
-<style scoped>
-aside:before {
-    content: "";
-    width: 1rem;
-    height: 1rem;
-    position: absolute;
-    top: 0rem;
-    right: -1rem;
-    border-bottom-right-radius: 50%;
-    box-shadow: 10px 0 0 0;
-    color: #222427;
-    transform: rotate(180deg);
-    z-index: 0;
-}
-</style>
 
 <script lang="ts">
 import { ipcRenderer } from 'electron';

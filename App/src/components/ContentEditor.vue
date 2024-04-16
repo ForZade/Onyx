@@ -96,7 +96,7 @@
             </header>
 
             <section class="flex flex-col grow cursor-text text-lg" @click="focusOnElement">
-                <editor-content :editor="editor" class="text-slate-100"/>
+                <editor-content :editor="editor" class="text-slate-100" spellcheck="false"/>
             </section>
         </main>
     </section>

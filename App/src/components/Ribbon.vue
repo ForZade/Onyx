@@ -1,5 +1,7 @@
 <template>
     <nav class="h-screen w-12 min-w-12 dark:bg-od-1 bg-ol-1 relative -mt-8">
+        <div class="w-4 h-4 absolute top-8 -right-4 rounded-br-[50%] shadow-[5px_0_0_0] dark:text-od-1 text-ol-1 rotate-180 z-10"></div>
+
         <section class="h-full flex flex-col gap-2 justify-center items-center">
             <main class="w-full items-center flex flex-col gap-2 relative">
                 <div 
@@ -76,7 +78,7 @@ export default {
 </script>
 
 <style scoped>
-nav:before {
+/* nav:before {
     content: "";
     width: 1rem;
     height: 1rem;
@@ -88,7 +90,7 @@ nav:before {
     color: #1E1F22;
     transform: rotate(180deg);
     z-index: 2;
-}
+} */
 
 .text-red-400 {
     color: rgb(248 113 113);
