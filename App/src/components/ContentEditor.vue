@@ -60,6 +60,14 @@
                 <button @click="editor.chain().focus().redo().run()" :disabled="!editor.can().chain().focus().redo().run()" class="w-8 h-8 dark:bg-od-hover-2.5 dark:hover:bg-od-hover-2 bg-ol-hover-2.5 hover:bg-ol-hover-2 rounded-lg grid place-items-center">
                     <Icon icon="tabler:arrow-forward" class="w-6 h-6 text-slate-800 dark:text-slate-100"/>
                 </button>
+
+                <button @click="console.log(editor)" :disabled="!editor.can().chain().focus().redo().run()" class="w-8 h-8 dark:bg-od-hover-2.5 dark:hover:bg-od-hover-2 bg-ol-hover-2.5 hover:bg-ol-hover-2 rounded-lg grid place-items-center">
+                    <Icon icon="tabler:x" class="w-6 h-6 text-slate-800 dark:text-slate-100"/>
+                </button>
+
+                <button @click="setData" class="w-8 h-8 dark:bg-od-hover-2.5 dark:hover:bg-od-hover-2 bg-ol-hover-2.5 hover:bg-ol-hover-2 rounded-lg grid place-items-center">
+                    <Icon icon="tabler:bucket" class="w-6 h-6 text-slate-800 dark:text-slate-100"/>
+                </button>
             </div>
 
             <div class="py-0.5 px-1 flex gap-1 rounded-lg dark:bg-od-2 bg-ol-2 dark:text-slate-100 text-slate-800">
@@ -73,24 +81,11 @@
     <section class="py-4 2xl:px-96 xl:px-72 lg:px-40 sm:px-16 px-4 overflow-y-scroll overflow-x-hidden no-scrollbar relative flex grow flex-col">
         <main class="flex flex-col grow">
             <header class="mt-8">
-                <div v-if="Editing">
-                    <textarea
-                        v-model="NewTitle"
-                        ref="textareaField"
-                        class="text-4xl w-full font-black pb-6 text-purple-300 bg-red-100 outline-none resize-none bg-transparent no-scrollbar focus:border-none"
-                        :style="{ height: 'auto' }"
-                        rows="1"
-                        @input="autoExpandTextarea"
-                        @blur="saveTitle"
-                        @keyup.enter="saveTitle"
-                    ></textarea>
-                </div>
-                <div v-else class="w-full">
+                <div class="w-full">
                     <h6
                         class="text-4xl font-black pb-6 text-purple-300 cursor-text break-all"
-                        @click="startEditing"
                     >
-                        {{ Title || "not named" }}
+                        {{ title || "not named" }}
                     </h6>
                 </div>
             </header>
@@ -121,28 +116,28 @@ export default {
                 { value: 'option2', icon: 'tabler:book' }
             ],
             Editing: false,
-            NewTitle: '',
-            Title: '',
+            title: '',
+            i: 0,
+            data: {}
         }
     },
     setup() {
-        const editor = useEditor({
-        editorProps: {
-            attributes: {
-            class: 'prose-default dark:prose-dark prose-sm lg:prose-lg xl:prose-xl mx-auto focus:outline-none text-slate-800 dark:text-slate-100',
-            },
-        },
-            content: '<p>I’m running Tiptap with Vue.js. 🎉</p>',
-            extensions: [
-                StarterKit,
-            ],
-            onUpdate: ({ editor }) => {
-                const json = editor.getJSON()
-                ipcRenderer.send('save-file', json);
-            },
-        })
 
-        return { editor }
+        const editor = useEditor({
+            editorProps: {
+                    attributes: {
+                    class: 'prose-default dark:prose-dark prose-sm lg:prose-lg xl:prose-xl mx-auto focus:outline-none text-slate-800 dark:text-slate-100',
+                    },
+            },
+            content: 'hello',
+            extensions: [StarterKit],
+            onUpdate: ({ editor }) => {
+                    const json = editor.getJSON();
+                    ipcRenderer.send('save-file', json);
+            },
+        });
+        
+        return { editor };
     },
     watch: {
         editable() {
@@ -151,38 +146,28 @@ export default {
         },
     },
     methods: {
+        setData(data: any) {
+            this.editor?.chain().focus().setContent(data).run()
+        },
         focusOnElement() {
             const element = document.getElementById('editor');
             if (element) {
                 element.focus();
             }
         },
-        startEditing() {
-            this.NewTitle = this.Title;
-            this.Editing = true;
-
-            this.$nextTick(() => {
-                const textareaField = this.$refs.textareaField as HTMLTextAreaElement;
-                textareaField.focus();
-                this.autoExpandTextarea();
-            });
-        },
-        saveTitle() {
-            this.Editing = false;
-            const newTitle = this.NewTitle.trim() === "" ? "not named" : this.NewTitle;
-            this.Title = newTitle;
-    
-            // Send an IPC message to save the title in the main process
-            // ipcRenderer.send('save-title', newTitle);
-        },
-        autoExpandTextarea() {
-            const textareaField = this.$refs.textareaField as HTMLTextAreaElement; // Type assertion
-            textareaField.style.height = "auto";
-            textareaField.style.height = `${textareaField.scrollHeight}px`;
-        },
         isSelected(index: number) {
             return this.selectedOption === this.options[index].value;
         }
     },
+    mounted() {
+        ipcRenderer.send('open-file');
+    
+        ipcRenderer.on('open-file', (_, data: any, title: string) => {
+            this.data = JSON.parse(data);
+            console.log(this.data, title);
+            this.setData(this.data);
+            this.title = title;
+        });
+    }
 }
 </script>

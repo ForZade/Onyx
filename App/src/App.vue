@@ -5,13 +5,15 @@
         <TitleBar/>
 
         <main class="w-screen flex grow">
-            <Ribbon @open-add-project-window="addProjectOpen = true" @open-settings-window="settingsOpen = true" ref="ribbonComponent"/>
-            <FileExplorer/>
+            <Ribbon @open-add-project-window="addProjectOpen = true" @open-settings-window="settingsOpen = true" ref="ribbonComponent" @context-menu="showContextMenu" />
+            <FileExplorer @context-menu="showContextMenu"/>
             <section class="w-full flex flex-col overflow-hidden" style="height: calc(100vh - 2.5rem);">
                 <ContentEditor />
             </section>
         </main>
     </main>
+
+    <ContextMenu ref="contextMenu"/>
 </template>
 
 <script lang="ts">
@@ -23,6 +25,8 @@ import Ribbon from './components/Ribbon.vue';
 import FileExplorer from './components/FileExplorer.vue';
 import ContentEditor from './components/ContentEditor.vue';
 
+import ContextMenu from './components/ContextMenu.vue';
+
 const ipcRenderer = window.require('electron').ipcRenderer;
 
 export default {
@@ -33,6 +37,7 @@ export default {
         Ribbon,
         FileExplorer,
         ContentEditor,
+        ContextMenu,
     },
     data() {
         return {
@@ -43,6 +48,11 @@ export default {
             SettingsWindowText: {} as object,
 
             Text: {} as any,
+
+            contextMenuVisible: false as boolean,
+            x: 0 as number,
+            y: 0 as number,
+            contextMenuItems: [] as string[],
         }
     },
     methods: {
@@ -54,7 +64,7 @@ export default {
             ipcRenderer.on('setup-app', (_, content: any) => {
                 if (content.theme === 'dark') {
                     console.log('Theme is dark')
-                    app?.classList.remove('dark'); //! CHANGE TO ADD
+                    app?.classList.add('dark'); //! CHANGE TO ADD
                 }
                 else {
                     console.log('Theme is light');
@@ -63,6 +73,11 @@ export default {
 
                 this.Text = content.language;
             });
+        },
+        showContextMenu(event: MouseEvent, data: any, x: number, y: number, show?: boolean) {
+            event.preventDefault();
+            //@ts-ignore
+            this.$refs.contextMenu.toggleContextMenu(data, x, y, show);
         },
         projectCreated() {
             this.addProjectOpen = false;
@@ -77,7 +92,7 @@ export default {
     computed: {
         appHeight() {
             return window.innerHeight - 32 - 40;
-        }
+        },
     }
 }
 </script>

@@ -9,6 +9,7 @@
                     :key="index" 
                     class="w-9 h-9 cursor-pointer rounded-xl grid place-items-center dark:hover:bg-od-hover-1 relative" 
                     @click="selectProject(project.label)" 
+                    @contextmenu.prevent="showContextMenu($event)"
                 >
                     <Icon :icon="'tabler:' + project.icon" class="w-7 h-7" :class="project.color"/>
                 </div>
@@ -27,10 +28,13 @@
             </div>
         </section>
     </nav>
+
+    
 </template>
 
 <script lang="ts">
 import { Icon } from '@iconify/vue';
+import ContextMenu from './ContextMenu.vue';
 import Tooltip from './extras/ribbonTooltip.vue';
 const ipcRenderer = window.require('electron').ipcRenderer;
 
@@ -38,6 +42,7 @@ export default {
     name: "Ribbon",
     components: {
         Icon,
+        ContextMenu,
         Tooltip,
     },
     data() {
@@ -49,6 +54,36 @@ export default {
 
             selectedProject: '',
             Projects: [] as any,
+
+            contextData: [
+                {
+                    category: "edit-project",
+                    projectColors: true,
+                    items: [
+                        {
+                            name: 'Edit icon',
+                            icon: 'edit',
+                            onClick: () => {
+                                console.log('Edit icon');
+                            }
+                        },
+                        {
+                            name: 'Rename',
+                            icon: 'pencil',
+                            onClick: () => {
+                                console.log('Rename');
+                            }
+                        },
+                        {
+                            name: 'Delete',
+                            icon: 'trash',
+                            onClick: () => {
+                                console.log('Delete');
+                            }
+                        }
+                    ]
+                },
+            ]
         }
     },
     mounted() {
@@ -56,6 +91,10 @@ export default {
         this.loadProjects();
     },
     methods: {
+        showContextMenu(event: MouseEvent) {
+            event.preventDefault();
+            this.$emit('context-menu', event, this.contextData, event.clientX, event.clientY, true);
+        },
         loadProjects() {
             ipcRenderer.invoke('get-folders', 'test').then((Projects) => {
                 this.Projects = Projects;

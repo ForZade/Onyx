@@ -6,6 +6,7 @@ interface ProjectConfigProp {
     label: string;
     icon: string;
     color: string;
+    loadedFilePath?: string;
 }
 
 export function manageProjectConfig(label: string, color: string, icon:string, oldProjectName: string) {

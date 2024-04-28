@@ -18,14 +18,12 @@
 
             <section class="w-full h-full p-4">
                 <component v-if="openPage <= 99" :is="settingList[openPage].name" @edit-project="editProject" :Text="Text[settingList[openPage].name]" />
-                <Project v-if="openPage === 100" :project="selectedProject" :Text="Text.Project" @close-settings-window="this.$emit('close-settings-window')" @open-icon-change="openIconChange" :Icon="this.icon"/>
-                <ChangeIcon v-if="openPage === 101" @back-action="openPage = 100" :Text="Text.Project" :Icon="this.icon" />
+                <Project v-if="openPage === 100" :project="selectedProject" :Text="Text.Project" @close-settings-window="$emit('close-settings-window')" @open-icon-change="openIconChange" :Icon="icon"/>
+                <ChangeIcon v-if="openPage === 101" @back-action="openPage = 100" :Text="Text.Project" :Icon="icon" />
             </section>
         </section>
     </main>
 </template>
-
-<script></script>
 
 <script lang="ts">
 import { Icon } from '@iconify/vue';
@@ -44,7 +42,10 @@ export default {
         ChangeIcon,
     },
     props: {
-        Text: Object,
+        Text: {
+            type: Object,
+            default: () => ({}),
+        },
     },
     data() {
         return {
@@ -55,7 +56,7 @@ export default {
                 { id: 0, name: 'General', icon: 'settings' },
                 { id: 1, name: 'Appearance', icon: 'palette' },
                 { id: 2, name: 'Projects', icon: 'folders' },
-            ] as object[],
+            ] as any,
             language: 'en' as string,
         }
     },

@@ -1,0 +1,49 @@
+{
+    "type": "doc",
+    "content": [
+        {
+            "type": "paragraph",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "Net ir va taip va galima:"
+                }
+            ]
+        },
+        {
+            "type": "blockquote",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": "Čia galima rašyti citatas"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "ar net vat va taip:"
+                }
+            ]
+        },
+        {
+            "type": "codeBlock",
+            "attrs": {
+                "language": null
+            },
+            "content": [
+                {
+                    "type": "text",
+                    "text": "Čia galima rašyti kodo blokus"
+                }
+            ]
+        }
+    ]
+}

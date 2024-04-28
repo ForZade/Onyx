@@ -3,6 +3,7 @@ import { createMainWindow } from './mainWindow.ts';
 import { setupIpcHandlers } from './ipcHandlers.ts';
 import { setTheme } from './functions/setTheme.ts';
 import { languageTexts } from './handleLanguages.ts';
+import { createProjectsFolder } from './setup/projectFolder.ts';
 const path = require('path');
 
 import { setupProjectLoader} from './projectLoader.ts';
@@ -34,5 +35,6 @@ async function createWindow() {
 
 app.on('ready', async () => {
   await createWindow();
+  createProjectsFolder();
   setTheme();
 });

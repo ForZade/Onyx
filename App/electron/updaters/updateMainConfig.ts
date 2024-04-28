@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import { getMainConfigPath } from '../handleConfig/getConfig';
 const fs = require('fs');
-const path = require('path');
+// const path = require('path');
 
 interface ConfigProps { // Sets config types
     theme?: string;
@@ -41,13 +41,37 @@ export function updateMainConfig(items: ConfigProps) {
         }
 
         fs.writeFileSync(configPath, JSON.stringify(config, null, 4));
-
-        console.log('Config has been changed:' + config);
     }
 }
 
 export function selectProject(project: string) {
-    const config: ConfigProps = {};
-    config.lastLoaded = project;
-    updateMainConfig(config);
-} //! not used yet
+    if (project) {
+        const config: ConfigProps = {};
+        config.lastLoaded = project;
+        updateMainConfig(config);
+    }
+}
+
+export function setLanguage(language: string) {
+    if (language) {
+        const config: ConfigProps = {};
+        config.language = language;
+        updateMainConfig(config);
+    }
+}
+
+export function setTheme(theme: string) {
+    if (theme) {
+        const config: ConfigProps = {};
+        config.theme = theme;
+        updateMainConfig(config);
+    }
+}
+
+export function setDocument(path: string) {
+    if(path) {
+        const config: ConfigProps = {};
+        config.loadedFilePath = path;
+        updateMainConfig(config);
+    }
+}

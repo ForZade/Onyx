@@ -1,24 +1,28 @@
 <template>
-    <aside ref="nav" class="relative dark:bg-od-2 bg-ol-2" :style="resizableDivStyle" @mousemove="checkHideNav">
+    <aside ref="nav" class="relative dark:bg-od-2 bg-ol-2" :style="resizableDivStyle">
         <div class="w-4 h-4 absolute top-0 -right-4 rounded-br-[50%] shadow-[10px_0_0_0] dark:text-od-2 text-ol-2 rotate-180 z-0"></div>
-        
-        <TreeGrid :treeData="treeData" class="mt-4"/>
+
+        <TreeGrid :treeData="treeData" @context-menu="showContextMenu" class="mt-4"/>
 
         <div class="w-3 h-full absolute top-0 right-0 cursor-col-resize grid place-items-center group" @mousedown="startResize">
             <div class="w-1 h-1/2 group-hover:bg-od-accent rounded-full"></div>
         </div>
     </aside>
 
-    
+    <ContextMenu ref="contextMenu"/>
 </template>
 
 <script lang="ts">
+import { Icon } from '@iconify/vue';
 import { ipcRenderer } from 'electron';
 import TreeGrid from './FileExplorer/TreeGrid.vue';
+import ContextMenu from './ContextMenu.vue';
 
 export default {
     components: {
+        Icon,
         TreeGrid,
+        ContextMenu,
     },
     data() {
       return {
@@ -32,7 +36,7 @@ export default {
   
         isNavHidden: false,
 
-        treeData: []
+        treeData: [],
       };
     },
     computed: {
@@ -43,13 +47,19 @@ export default {
       },
     },
     methods: {
+      showContextMenu(event: MouseEvent, data: any, x: number, y: number, show?: boolean) {
+        event.preventDefault();
+        this.$emit('context-menu', event, data, x, y, show);
+      },
        toggleNav() {
         this.isNavHidden = !this.isNavHidden;
+        //@ts-ignore
         this.$refs.nav.style.display = this.isNavHidden ? "none" : "block";
       },
       startResize(event: Event) {
         event.preventDefault();
         this.isResizing = true;
+        //@ts-ignore
         this.initialMouseX = event.clientX;
         this.initialWidth = this.width;
   
@@ -58,6 +68,7 @@ export default {
       },
       resize(event: Event) {
         if (this.isResizing) {
+          //@ts-ignore
           const dx = event.clientX - this.initialMouseX;
           const newWidth = this.initialWidth + dx;
   

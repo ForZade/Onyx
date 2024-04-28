@@ -26,11 +26,14 @@ export default {
         Icon,
     },
     props: {
-        Text: Object,
+        Text: {
+            type: Object,
+            default: () => ({}),
+        },
     },
     data() {
         return {
-            Projects: [],
+            Projects: [] as any,
         }
     },
     methods: {

@@ -10,7 +10,7 @@ export interface ConfigProp {
     theme: string;
     language: string;
     lastLoaded: string;
-    loadedFilePath: string;
+    loadedFilePath?: string;
 }
 
 export interface ProjectConfigProp {

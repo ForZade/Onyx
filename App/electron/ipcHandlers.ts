@@ -9,6 +9,9 @@ import { setLanguage } from './functions/setLanguage.ts';
 import { loadFileTree } from './loaders/FileTree.ts';
 import { SaveFile } from './functions/saveFile.ts';
 import { OpenFile } from './functions/openFile.ts';
+import { ContextMenu } from './functions/ContextMenu.ts';
+import { setTitle } from './functions/setTitle.ts';
+import { createNoteFile } from './functions/createNote.ts';
 
 const titleBarActions = [
   { action: 'get-window-state', function: getWindowState, },
@@ -42,8 +45,10 @@ export function setupIpcHandlers(win: any) {
     event.sender.send('load-file-tree', fileTree);
   })
 
-  ipcMain.handle('get-config', (_event: any) => {
-    getMainConfig();
+  ipcMain.on('get-config', (event: any) => {
+    const config = getMainConfig();
+
+    event.sender.send('get-config', config);
   });
 
   ipcMain.on('setup-app', (event: any) => {
@@ -55,11 +60,30 @@ export function setupIpcHandlers(win: any) {
     event.sender.send('setup-app', content);
   });
 
-  ipcMain.on('open-file', (_event: any, path: string) => {
-    OpenFile(path);
+  ipcMain.on('open-file', (event: any, path: string) => {
+    const data = OpenFile(path);
+    const title = setTitle();
+
+    console.log(data, title);
+
+    event.sender.send('open-file', data, title)
   })
 
-  ipcMain.on('save-file', (_event: any, _content: any) => {
-    SaveFile();
+  ipcMain.on('save-file', (_event: any, content: any) => {
+    SaveFile(content);
   });
+
+  ipcMain.on('show-context-menu', (_event, x, y) => {
+    const contextMenu = ContextMenu.buildContextMenu();
+    contextMenu.popup({ x, y });
+  });
+
+  ipcMain.on('create-note', (_event: any, path: string) => {
+    console.log('create')
+    createNoteFile(path);
+  })
+
+  ipcMain.on('start-renaming-item', (event: any,) => {
+    event.sender.send('start-renaming-item', true);
+  })
 }

@@ -16,6 +16,7 @@ const allowedExtensions = ['.json'];
 export function loadFileTree() {
     const mainConfig = getMainConfig();
     const loadedProject = mainConfig?.lastLoaded;
+    //@ts-ignore
     const projectPath = getProjectPath(loadedProject);
 
     if (!projectPath) {
@@ -52,6 +53,7 @@ function generateFileTree(directoryPath: string): FileNode {
         const fileStats = fs.statSync(filePath);
         if (fileStats.isDirectory()) {
             const subdirectoryNode = generateFileTree(filePath);
+            //@ts-ignore
             fileNode.children.push(subdirectoryNode);
         } else {
             const extension = path.extname(file).toLowerCase();
@@ -63,6 +65,7 @@ function generateFileTree(directoryPath: string): FileNode {
                     type: extension,
                     path: filePath,
                 };
+                //@ts-ignore
                 fileNode.children.push(fileItem);
             }
         }
