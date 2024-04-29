@@ -1,35 +1,27 @@
-const fs = require('fs');
+import { getMainConfig } from "../handleConfig/getConfig";
 
-export function createNoteFile(path: string) {
+const fs = require('fs');
+const path = require('path');
+
+export function createNoteFile(title: string) {
     const data = {
         type: "doc",
         content: [
             {
-                type: "paragraph",
-                content: [
-                    {
-                        type: "text",
-                        text: "Ar net vat va šitaip atskirti"
-                    }
-                ]
+                type: "text",
+                content: "New note"
             },
-            {
-                type: "horizontalRule"
-            },
-            {
-                type: "paragraph",
-                content: [
-                    {
-                        type: "text",
-                        text: "Tekstą."
-                    }
-                ]
-            }
         ]
     }
 
     const jsonData = JSON.stringify(data, null, 2);
 
-    fs.writeFileSync(`${path}/file.json`, jsonData, 'utf-8');
+    const config: any = getMainConfig();
+    const project = config.lastLoaded;
+
+
+    const filePath = path.join(__dirname, '..', 'src', 'assets', 'test', project,)
+
+    fs.writeFileSync(`${filePath}/${title}.json`, jsonData, 'utf-8');
     console.log('note created')
 }

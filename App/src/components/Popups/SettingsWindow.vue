@@ -17,7 +17,7 @@
             </nav>
 
             <section class="w-full h-full p-4">
-                <component v-if="openPage <= 99" :is="settingList[openPage].name" @edit-project="editProject" :Text="Text[settingList[openPage].name]" />
+                <component v-if="openPage <= 99" :is="settingList[openPage].name" @edit-project="editProject" :Text="Text[settingList[openPage].name]" @set-theme="$emit('set-theme')" />
                 <Project v-if="openPage === 100" :project="selectedProject" :Text="Text.Project" @close-settings-window="$emit('close-settings-window')" @open-icon-change="openIconChange" :Icon="icon"/>
                 <ChangeIcon v-if="openPage === 101" @back-action="openPage = 100" :Text="Text.Project" :Icon="icon" />
             </section>
@@ -49,7 +49,7 @@ export default {
     },
     data() {
         return {
-            openPage: 101 as number,
+            openPage: 1 as number,
             selectedProject: {} as object,
             icon: '' as string,
             settingList: [

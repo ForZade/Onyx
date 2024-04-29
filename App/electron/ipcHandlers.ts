@@ -1,9 +1,9 @@
 import { IpcMainEvent, ipcMain } from 'electron';
 import { createFolder } from "./addProject.ts";
 import { manageProjectConfig } from './manageConfig.ts';
-import { selectProject } from './updaters/updateMainConfig.ts';
+import { selectProject, setConfigTheme } from './updaters/updateMainConfig.ts';
 import { minimizeWindow, closeWindow, changeWindowSize, getWindowState } from './functions/TitleBar.ts';
-import { getMainConfig } from './handleConfig/getConfig.ts';
+import { getMainConfig, getMainConfigPath } from './handleConfig/getConfig.ts';
 import { setTheme } from './functions/setTheme.ts';
 import { setLanguage } from './functions/setLanguage.ts';
 import { loadFileTree } from './loaders/FileTree.ts';
@@ -12,6 +12,9 @@ import { OpenFile } from './functions/openFile.ts';
 import { ContextMenu } from './functions/ContextMenu.ts';
 import { setTitle } from './functions/setTitle.ts';
 import { createNoteFile } from './functions/createNote.ts';
+import { deleteNote } from './functions/deleteNote.ts';
+
+const fs = require('fs');
 
 const titleBarActions = [
   { action: 'get-window-state', function: getWindowState, },
@@ -78,12 +81,29 @@ export function setupIpcHandlers(win: any) {
     contextMenu.popup({ x, y });
   });
 
-  ipcMain.on('create-note', (_event: any, path: string) => {
+  ipcMain.on('create-note', (_event: any, title: string) => {
     console.log('create')
-    createNoteFile(path);
+    createNoteFile(title);
   })
 
   ipcMain.on('start-renaming-item', (event: any,) => {
     event.sender.send('start-renaming-item', true);
+  })
+
+  ipcMain.on('set-theme' , (_event: any, theme: string) => {
+    setConfigTheme(theme)
+  })
+
+  ipcMain.on('delete-note', (_event: any, path: string) => {
+    console.log('delete')
+    deleteNote(path);
+  })
+
+  fs.watch(getMainConfigPath(), (eventType: any, _filename:any) => {
+    if (eventType === 'change') {
+      const config: any = getMainConfig();
+      const path = config.lastLoadedPath;
+      win.webContents.send('update-path', path);
+    }
   })
 }

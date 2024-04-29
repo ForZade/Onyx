@@ -60,7 +60,7 @@ export function setLanguage(language: string) {
     }
 }
 
-export function setTheme(theme: string) {
+export function setConfigTheme(theme: string) {
     if (theme) {
         const config: ConfigProps = {};
         config.theme = theme;
@@ -68,10 +68,9 @@ export function setTheme(theme: string) {
     }
 }
 
-export function setDocument(path: string) {
-    if(path) {
-        const config: ConfigProps = {};
-        config.loadedFilePath = path;
-        updateMainConfig(config);
-    }
+export function setDocument(path: any) {
+    const config: ConfigProps = {};
+    config.loadedFilePath = path;
+    console.log(config.loadedFilePath);
+    updateMainConfig(config);
 }

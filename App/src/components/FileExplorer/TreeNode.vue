@@ -6,7 +6,7 @@
             <input v-else ref="input" type="text" v-model="title" class="w-full h-4 bg-transparent outline-none dark:text-od-icon text-ol-icon focus:outline-none focus:border-none rounded-md px-0 border-none">
         </span>
         <ul v-show="expanded">
-            <tree-node v-for="child in node.children" :key="child.id" :node="child" class="pl-4"></tree-node>
+            <tree-node v-for="child in node.children" :key="child.id" :node="child" class="pl-4" ></tree-node>
         </ul>
     </div>
 </template>
@@ -14,7 +14,6 @@
 <script lang="ts">
 import { Icon } from '@iconify/vue';
 import ContextMenu from '../ContextMenu.vue';
-import { ref } from 'vue';
 import { ipcRenderer } from 'electron'
 
   export default {
@@ -42,8 +41,6 @@ import { ipcRenderer } from 'electron'
                 name: 'New note',
                 icon: 'file-text',
                 onClick: () => {
-                  //@ts-ignore
-                  ipcRenderer.send('create-note', this.path);
                   console.log('New Note Creating');
                 }
               },
@@ -58,14 +55,14 @@ import { ipcRenderer } from 'electron'
                 name: 'Rename',
                 icon: 'pencil',
                 onClick: () => {
-                    this.renameFunction();
+                    console.log('rename')
                 }
               },
               {
                 name: 'Delete',
                 icon: 'trash',
                 onClick: () => {
-                  console.log('Delete');
+                  console.log('delete')
                 }
               }
             ]
@@ -86,7 +83,7 @@ import { ipcRenderer } from 'electron'
                 name: 'Delete',
                 icon: 'trash',
                 onClick: () => {
-                  console.log('Delete');
+                  console.log('delete')
                 }
               }
             ]

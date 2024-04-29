@@ -1,9 +1,12 @@
-import { ConfigProp, getMainConfig } from '../handleConfig/getConfig';
+import { getMainConfig } from '../handleConfig/getConfig';
 
-export function setTheme() {
-    const config: ConfigProp | undefined = getMainConfig();
+export function setTheme(theme?: string) {
+    if (!theme) {
+        const config: any = getMainConfig();
+        theme = config.theme;
+    }
 
-    switch (config?.theme) {
+    switch (theme) {
         case 'dark':
             return 'dark';
 

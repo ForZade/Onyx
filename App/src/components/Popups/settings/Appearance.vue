@@ -37,14 +37,14 @@ export default {
             themes: [
                 { label: 'light', color: 'bg-ol-1', icon: 'tabler:sun', iconColor: 'text-ol-3' },
                 { label: 'dark', color: 'bg-od-2', icon: 'tabler:moon', iconColor: 'text-od-4' },
-                { label: 'system', color: 'dark:bg-od-2 bg-ol-2', icon: 'tabler:device-desktop', iconColor: 'dark:text-od-4 text-ol-3' },
             ],
         }
     },
     methods: {
         applyTheme(theme: string) {
             this.setTheme = theme;
-            ipcRenderer.invoke('set-theme', theme);
+            ipcRenderer.send('set-theme', theme);
+            this.$emit('set-theme');
         }
     },
     mounted() {

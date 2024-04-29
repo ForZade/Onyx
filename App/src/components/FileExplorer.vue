@@ -2,7 +2,13 @@
     <aside ref="nav" class="relative dark:bg-od-2 bg-ol-2" :style="resizableDivStyle">
         <div class="w-4 h-4 absolute top-0 -right-4 rounded-br-[50%] shadow-[10px_0_0_0] dark:text-od-2 text-ol-2 rotate-180 z-0"></div>
 
-        <TreeGrid :treeData="treeData" @context-menu="showContextMenu" class="mt-4"/>
+        <header class="p-2">
+          <div class="w-6 h-6 rounded-md dark:hover:bg-od-hover-1 hover:bg-ol-hover-1 grid place-items-center cursor-pointer" @click="addFile">
+            <Icon icon="tabler:file-plus" class="w-5 h-5 dark:text-od-icon text-ol-icon" />
+          </div>
+        </header>
+
+        <TreeGrid :treeData="treeData" @context-menu="showContextMenu" class="mt-1"/>
 
         <div class="w-3 h-full absolute top-0 right-0 cursor-col-resize grid place-items-center group" @mousedown="startResize">
             <div class="w-1 h-1/2 group-hover:bg-od-accent rounded-full"></div>
@@ -47,6 +53,9 @@ export default {
       },
     },
     methods: {
+      addFile() {
+        this.$emit('add-file-open');
+      },
       showContextMenu(event: MouseEvent, data: any, x: number, y: number, show?: boolean) {
         event.preventDefault();
         this.$emit('context-menu', event, data, x, y, show);
