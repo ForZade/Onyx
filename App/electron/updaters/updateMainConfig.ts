@@ -7,7 +7,7 @@ interface ConfigProps { // Sets config types
     theme?: string;
     language?: string;
     lastLoaded?: string;
-    loadedFilePath?: string;
+    loadedFilePath?: string[];
 }
 
 export function updateMainConfig(items: ConfigProps) {
@@ -19,7 +19,7 @@ export function updateMainConfig(items: ConfigProps) {
             theme: 'system',
             language: 'en',
             lastLoaded: '',
-            loadedFilePath: '',
+            loadedFilePath: [],
         };
 
         // If config exists, reads config

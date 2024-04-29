@@ -9,7 +9,7 @@
                     :key="index" 
                     class="w-9 h-9 cursor-pointer rounded-xl grid place-items-center dark:hover:bg-od-hover-1 relative" 
                     @click="selectProject(project.label)" 
-                    @contextmenu.prevent="showContextMenu($event)"
+                    @contextmenu.prevent="showContextMenu($event, project.label)"
                 >
                     <Icon :icon="'tabler:' + project.icon" class="w-7 h-7" :class="project.color"/>
                 </div>
@@ -53,6 +53,7 @@ export default {
             y: 0,
 
             selectedProject: '',
+            contextProject: '',
             Projects: [] as any,
 
             contextData: [
@@ -60,13 +61,6 @@ export default {
                     category: "edit-project",
                     projectColors: true,
                     items: [
-                        {
-                            name: 'Edit icon',
-                            icon: 'edit',
-                            onClick: () => {
-                                console.log('Edit icon');
-                            }
-                        },
                         {
                             name: 'Rename',
                             icon: 'pencil',
@@ -78,7 +72,7 @@ export default {
                             name: 'Delete',
                             icon: 'trash',
                             onClick: () => {
-                                console.log('Delete');
+                                ipcRenderer.send('delete-project', this.contextProject);
                             }
                         }
                     ]
@@ -91,8 +85,9 @@ export default {
         this.loadProjects();
     },
     methods: {
-        showContextMenu(event: MouseEvent) {
+        showContextMenu(event: MouseEvent, project: string) {
             event.preventDefault();
+            this.contextProject = project;
             this.$emit('context-menu', event, this.contextData, event.clientX, event.clientY, true);
         },
         loadProjects() {

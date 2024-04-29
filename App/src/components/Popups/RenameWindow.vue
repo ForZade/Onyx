@@ -1,5 +1,5 @@
 <template>
-    <main class="dark:bg-od-darken bg-ol-darken backdrop-blur w-screen h-full absolute z-30 flex justify-center items-center overflow-hidden top-0 left-0" @click="cancelCreation">
+    <main class="dark:bg-od-darken bg-ol-darken backdrop-blur w-screen h-full absolute z-30 flex justify-center items-center overflow-hidden top-0 left-0" @click="cancelRename">
         <div class="w-[300px] dark:bg-od-4 bg-ol-4 rounded-xl overflow-hidden">
             <section class="p-4 w-full grid place-items-center">
                 <div class="w-4/5 flex flex-col gap-1">
@@ -25,7 +25,7 @@
 
 <script lang="ts">
     import { Icon } from '@iconify/vue';
-import { ipcRenderer } from 'electron';
+    import { ipcRenderer } from 'electron';
 
     export default {
         components: {
@@ -34,25 +34,31 @@ import { ipcRenderer } from 'electron';
         data() {
             return {
                 title: '',
+                path: '',
                 actionButtons: [
-                { id: 0, name: "Create", icon: 'tabler:plus', class: 'bg-purple-500 text-white hover:bg-purple-400', action: this.createFile },
-                { id: 1, name: "Cancel", icon: 'tabler:x', class: 'bg-transparent dark:text-white text-black hover:bg-od-hover-2', action: this.cancelCreation },
+                { id: 0, name: "Rename", icon: 'tabler:pencil', class: 'bg-purple-500 text-white hover:bg-purple-400', action: this.renameFile },
+                { id: 1, name: "Cancel", icon: 'tabler:x', class: 'bg-transparent dark:text-white text-black hover:bg-od-hover-2', action: this.cancelRename },
                 ],
             }
         },
         methods: {
-            cancelCreation(event:any) {
+            cancelRename(event:any) {
                 if (event.target === event.currentTarget) {
-                    this.$emit('close-add-file');
+                    this.$emit('close-rename-window');
                 }
                 else if (event.key === 'Escape') {
-                    this.$emit('close-add-file');
+                    this.$emit('close-rename-window');
                 }
             },
-            createFile() {
-                ipcRenderer.send('create-note', this.title);
-                this.$emit('close-add-file')
-            }
+            renameFile() {
+                ipcRenderer.send('rename-path', )
+                this.$emit('close-rename-window');
+            },
+        },
+        mounted() {
+            ipcRenderer.on('rename-item', (_event: any, path: any) => {
+                this.path = path;
+            });
         }
     }
 </script> 

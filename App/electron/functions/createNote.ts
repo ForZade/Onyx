@@ -1,3 +1,4 @@
+import { app } from "electron";
 import { getMainConfig } from "../handleConfig/getConfig";
 
 const fs = require('fs');
@@ -20,7 +21,7 @@ export function createNoteFile(title: string) {
     const project = config.lastLoaded;
 
 
-    const filePath = path.join(__dirname, '..', 'src', 'assets', 'test', project,)
+    const filePath = path.join(app.getAppPath(), 'projects', project,)
 
     fs.writeFileSync(`${filePath}/${title}.json`, jsonData, 'utf-8');
     console.log('note created')

@@ -1,13 +1,15 @@
 <template>
-    <main class="w-full h-full dark:bg-od-3 bg-ol-3">
+    <main :key="reloadKey" class="w-full h-full dark:bg-od-3 bg-ol-3">
         <AddProject v-if="addProjectOpen" @close-add-project="projectCreated" :Text="Text.AddProject"/>
         <SettingsWindow v-if="settingsOpen" @close-settings-window="settingsOpen = false" :Text="Text.Settings" @set-theme="setupApp"/>
         <AddFile v-if="addFileOpen" @close-add-file="addFileOpen = false"/>
+        <RenameWindow v-if="renameWindowOpen" @close-rename-window="renameWindowOpen = false"/>
+
         <TitleBar/>
 
         <main class="w-screen flex grow">
             <Ribbon @open-add-project-window="addProjectOpen = true" @open-settings-window="settingsOpen = true" ref="ribbonComponent" @context-menu="showContextMenu" />
-            <FileExplorer v-if="fileExplorer" @context-menu="showContextMenu" @add-file-open="addFileOpen = true"/>
+            <FileExplorer v-if="fileExplorer" @context-menu="showContextMenu" @add-file-open="addFileOpen = true" />
             <section class="w-full flex flex-col overflow-hidden" style="height: calc(100vh - 2.5rem);">
                 <ContentEditor v-if="path !== 'NotLoaded'"/>
                 <NoItemLoaded v-else/>
@@ -22,6 +24,7 @@
 import AddProject from './components/Popups/AddProject.vue';
 import SettingsWindow from './components/Popups/SettingsWindow.vue';
 import AddFile from './components/Popups/AddFile.vue';
+import RenameWindow from './components/Popups/RenameWindow.vue';
 
 import TitleBar from './components/TitleBar.vue';
 import Ribbon from './components/Ribbon.vue';
@@ -38,6 +41,7 @@ export default {
         AddProject,
         SettingsWindow,
         AddFile,
+        RenameWindow,
         TitleBar,
         Ribbon,
         FileExplorer,
@@ -50,6 +54,7 @@ export default {
             addProjectOpen: false as boolean,
             settingsOpen: false as boolean,
             addFileOpen: false as boolean,
+            renameWindowOpen: false as boolean,
 
             fileExplorer: true as boolean,
 
@@ -63,7 +68,8 @@ export default {
             y: 0 as number,
             contextMenuItems: [] as string[],
 
-            path: ''
+            path: '',
+            reloadKey: 0
         }
     },
     created() {
@@ -120,6 +126,14 @@ export default {
     mounted() {
         this.setupApp();
         this.checkPath();
+
+        ipcRenderer.on('reload-components', () => {
+            this.reloadKey += 1
+        });
+
+        ipcRenderer.on('open-rename-window', () => {
+          this.renameWindowOpen = true;
+        })
     },
     computed: {
         appHeight() {

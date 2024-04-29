@@ -1,4 +1,4 @@
-
+import { app } from 'electron';
 const fs = require('fs');
 const path = require('path');
 
@@ -7,12 +7,12 @@ export function createFolder(name:string, _icon: string, _color: string) {
   if (!name) {
     const baseName = 'New Project';
     
-    if (!fs.existsSync(path.join(__dirname, '..', 'src', 'assets', 'test', baseName))) {
+    if (!fs.existsSync(path.join(app.getAppPath(), 'projects', baseName))) {
       name = baseName;
     } 
     else {
       let counter = 2;
-      while (fs.existsSync(path.join(__dirname, '..', 'src', 'assets', 'test', `${baseName} ${counter}`))) {
+      while (fs.existsSync(path.join(app.getAppPath(), 'projects', `${baseName} ${counter}`))) {
           counter++;
       }
 
@@ -20,7 +20,7 @@ export function createFolder(name:string, _icon: string, _color: string) {
     }
   }
 
-    const assetsPath = path.join(__dirname, '..', 'src', 'assets', 'test', name);
+    const assetsPath = path.join(app.getAppPath(), 'projects', name);
 
     try {
       fs.mkdirSync(assetsPath);
@@ -38,7 +38,7 @@ interface ProjectConfig {
 }
 
 function createProjectConfig(name: string, icon: string, color: string) {
-  const configPath = path.join(__dirname, '..', 'src', 'assets', 'test', name, 'project.conf');
+  const configPath = path.join(app.getAppPath(), 'projects', name, 'project.conf');
 
   try {
     // Read existing config file if it exists, or create a new empty one

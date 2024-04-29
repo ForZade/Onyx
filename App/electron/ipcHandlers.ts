@@ -13,6 +13,7 @@ import { ContextMenu } from './functions/ContextMenu.ts';
 import { setTitle } from './functions/setTitle.ts';
 import { createNoteFile } from './functions/createNote.ts';
 import { deleteNote } from './functions/deleteNote.ts';
+import { deleteProject } from './functions/deleteProject.ts'
 
 const fs = require('fs');
 
@@ -67,8 +68,6 @@ export function setupIpcHandlers(win: any) {
     const data = OpenFile(path);
     const title = setTitle();
 
-    console.log(data, title);
-
     event.sender.send('open-file', data, title)
   })
 
@@ -81,22 +80,23 @@ export function setupIpcHandlers(win: any) {
     contextMenu.popup({ x, y });
   });
 
-  ipcMain.on('create-note', (_event: any, title: string) => {
+  ipcMain.on('create-note', (event: any, title: string) => {
     console.log('create')
     createNoteFile(title);
-  })
-
-  ipcMain.on('start-renaming-item', (event: any,) => {
-    event.sender.send('start-renaming-item', true);
+    event.sender.send('reload-components');
   })
 
   ipcMain.on('set-theme' , (_event: any, theme: string) => {
     setConfigTheme(theme)
   })
 
-  ipcMain.on('delete-note', (_event: any, path: string) => {
-    console.log('delete')
+  ipcMain.on('delete-note', (event: any, path: string) => {
     deleteNote(path);
+
+    setTimeout(() => {
+      event.sender.send('reload-components');
+    }, 100);
+    
   })
 
   fs.watch(getMainConfigPath(), (eventType: any, _filename:any) => {
@@ -105,5 +105,16 @@ export function setupIpcHandlers(win: any) {
       const path = config.lastLoadedPath;
       win.webContents.send('update-path', path);
     }
+  })
+
+  ipcMain.on('delete-project', (event: any, project: string) => {
+    deleteProject(project);
+    event.sender.send('reload-components');
+  })
+
+  ipcMain.on('get-project-name', (event: any) => {
+    const config = getMainConfig();
+    const loadedProjectName = config?.lastLoaded;
+    event.sender.send('get-project-name', loadedProjectName);
   })
 }

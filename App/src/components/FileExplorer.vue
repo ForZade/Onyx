@@ -2,7 +2,9 @@
     <aside ref="nav" class="relative dark:bg-od-2 bg-ol-2" :style="resizableDivStyle">
         <div class="w-4 h-4 absolute top-0 -right-4 rounded-br-[50%] shadow-[10px_0_0_0] dark:text-od-2 text-ol-2 rotate-180 z-0"></div>
 
-        <header class="p-2">
+        <header class="w-full p-2 flex items-center justify-between">
+          <h1 class="font-bold dark:text-od-icon text-ol-icon">{{ projectName }}</h1>
+
           <div class="w-6 h-6 rounded-md dark:hover:bg-od-hover-1 hover:bg-ol-hover-1 grid place-items-center cursor-pointer" @click="addFile">
             <Icon icon="tabler:file-plus" class="w-5 h-5 dark:text-od-icon text-ol-icon" />
           </div>
@@ -43,6 +45,7 @@ export default {
         isNavHidden: false,
 
         treeData: [],
+        projectName: '',
       };
     },
     computed: {
@@ -102,14 +105,21 @@ export default {
         ipcRenderer.send('load-file-tree');
         
         ipcRenderer.on('load-file-tree', (_, treeData) => {
+          ipcRenderer.send('get-project-name');
           console.log(treeData);
           this.treeData = treeData;
           console.log(this.treeData);
         })
-      }
+
+        
+      },
     },
     mounted() {
       this.loadFileTree();
+
+      ipcRenderer.on('get-project-name', (_, projectName) => {
+          this.projectName = projectName;
+      })
     }
   };
 </script>

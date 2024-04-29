@@ -3,9 +3,9 @@ const fs = require('fs');
 const path = require('path');
 
 export function setupProjectLoader() {
-    ipcMain.handle('get-folders', (_event: any, folderPath: string) => {
+    ipcMain.handle('get-folders', (_event: any, ) => {
         if (app.isReady()) {
-          const folderFullPath = path.join(__dirname, '..', 'src', 'assets', folderPath);
+          const folderFullPath = path.join(app.getAppPath(), 'projects');
           
           try {
             const folders = fs.readdirSync(folderFullPath, { withFileTypes: true })

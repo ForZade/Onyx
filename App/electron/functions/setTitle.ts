@@ -1,17 +1,20 @@
 import { getMainConfig } from "../handleConfig/getConfig";
 
 export function setTitle() {
-    const isWindows = process.platform === 'win32';
+    const config: any = getMainConfig();
+    const pathParts = config.loadedFilePath;
+    console.log(pathParts);
 
-    const path: any = getMainConfig();
-    let item;
-    if(!isWindows) {
-        item = path.loadedFilePath.split('/').pop();
+    let title;
+    if (pathParts.length >= 2) {
+        console.log('this')
+        title = pathParts[1].split('.')[0];
     }
     else {
-        item = path.loadedFilePath.split('\\').pop();
+        console.log('that');
+        title = '';
     }
-    const title = item.split('.')[0];
 
+    console.log(title);
     return title;
 }

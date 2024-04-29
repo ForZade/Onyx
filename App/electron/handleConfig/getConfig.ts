@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 export function getMainConfigPath() {
-    return path.join(__dirname, '..', 'src', 'assets', 'test', 'main.conf');
+    return path.join(app.getAppPath(), 'projects', 'main.conf');
 }
 
 export interface ConfigProp {
@@ -45,7 +45,7 @@ export function getMainConfig() { //Previous findConfig function
 }
 
 export function getProjectConfigPath(project: string) {
-    return path.join(__dirname, '..', 'src', 'assets', 'test', project, 'project.conf');
+    return path.join(app.getAppPath(), 'projects', project, 'project.conf');
 }
 
 export function getProjectConfig(project: string) {
@@ -74,5 +74,5 @@ export function getProjectConfig(project: string) {
 }
 
 export function getProjectPath(project: string) {
-    return path.join(__dirname, '..', 'src', 'assets', 'test', project);
+    return path.join(app.getAppPath(), 'projects', project);
 }

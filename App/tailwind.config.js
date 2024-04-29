@@ -19,6 +19,17 @@ module.exports = {
             },
           }
         },
+        default: {
+          css: {
+            color: theme('colors.slate.100'),
+            pre: {
+              backgroundColor: '#E3E5E8',
+            },
+            blockquote: {
+              borderLeft: '2px solid rgb(192 132 252)',
+            },
+          }
+        }
       }),
       colors: {
         'od-context': '#111214',

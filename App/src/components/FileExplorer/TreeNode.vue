@@ -33,41 +33,6 @@ import { ipcRenderer } from 'electron'
         editing: false,
         title: '',
         expanded: false,
-        contextDir: [
-          {
-            category: "create-notes",
-            items: [
-              {
-                name: 'New note',
-                icon: 'file-text',
-                onClick: () => {
-                  console.log('New Note Creating');
-                }
-              },
-              {
-                name: 'New folder',
-                icon: 'folder',
-                onClick: () => {
-                  console.log('New Folder Creating');
-                }
-              },
-              {
-                name: 'Rename',
-                icon: 'pencil',
-                onClick: () => {
-                    console.log('rename')
-                }
-              },
-              {
-                name: 'Delete',
-                icon: 'trash',
-                onClick: () => {
-                  console.log('delete')
-                }
-              }
-            ]
-          }
-        ],
         contextJson: [
         {
             category: "edit-items",
@@ -83,7 +48,7 @@ import { ipcRenderer } from 'electron'
                 name: 'Delete',
                 icon: 'trash',
                 onClick: () => {
-                  console.log('delete')
+                  ipcRenderer.send('delete-note', this.path);
                 }
               }
             ]
@@ -92,15 +57,6 @@ import { ipcRenderer } from 'electron'
       }
     },
     methods: {
-      renameFunction() {
-        ipcRenderer.send('start-renaming-item');
-        ipcRenderer.on('start-renaming-item', (_, data: boolean) =>{
-          console.log('editing file name now');
-
-          this.editing = data;
-          this.$refs.input?.value.focus();
-        })
-      },
       renameClickOff() {
 
       },
@@ -114,11 +70,7 @@ import { ipcRenderer } from 'electron'
       },
       handleContextMenu(event: MouseEvent, node: any) {
         event.preventDefault();
-        if(node.type === 'dir') {
-          this.path = node.path
-          this.$emit('context-menu', event, this.contextDir, event.clientX, event.clientY, false);
-        }
-        else if (node.type === '.json') {
+        if (node.type === '.json') {
           this.path = node.path
           this.$emit('context-menu', event, this.contextJson, event.clientX, event.clientY, false);
         }

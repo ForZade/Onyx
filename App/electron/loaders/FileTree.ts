@@ -16,6 +16,11 @@ const allowedExtensions = ['.json'];
 export function loadFileTree() {
     const mainConfig = getMainConfig();
     const loadedProject = mainConfig?.lastLoaded;
+
+    if(!loadedProject) {
+        return [];
+    }
+
     //@ts-ignore
     const projectPath = getProjectPath(loadedProject);
 
